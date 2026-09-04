@@ -1,377 +1,1912 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#111827">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
 <title>Çeto Senaryo</title>
+
+<link rel="manifest" href="./manifest.webmanifest">
+
 <style>
-:root{--bg:#f3f4f6;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--soft:#f9fafb;--ok:#047857;--warn:#b45309;--danger:#b91c1c}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Arial,sans-serif;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
-header{position:sticky;top:0;z-index:40;background:rgba(243,244,246,.95);backdrop-filter:blur(18px);padding:calc(14px + env(safe-area-inset-top)) 16px 12px;border-bottom:1px solid var(--line)}
-h1{font-size:20px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{max-width:1100px;margin:auto;padding:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.grow{flex:1;min-width:170px}label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px}input,select,textarea,button{font:inherit}
-input[type=text],select,textarea{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:11px 12px;background:#fff;color:var(--ink);outline:none}textarea{min-height:66px;resize:vertical}
-button,.filebtn{border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:white;font-weight:700;cursor:pointer;text-align:center;display:inline-block}button.secondary{background:#e5e7eb;color:#111827}button.ghost{background:#fff;color:#111827;border:1px solid #d1d5db}button.danger{background:#fee2e2;color:var(--danger)}input[type=file]{display:none}
-.status{font-size:13px;color:var(--muted);padding-top:8px}.ok{color:var(--ok)}.err{color:var(--danger)}.warn{color:var(--warn)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.episode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.episode-card{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--soft);cursor:pointer}.episode-card.active{outline:2px solid #111827;background:#fff}
-.episode-title{font-weight:800;font-size:17px}.meta{font-size:12px;color:var(--muted);margin-top:5px}.players{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}.player-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;color:var(--ink)}.player-card b{display:block}.player-card span{font-size:12px;color:var(--muted)}
-.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:white;-webkit-overflow-scrolling:touch}table{border-collapse:separate;border-spacing:0;width:100%;min-width:1100px}th,td{padding:10px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);vertical-align:top;text-align:left}th{position:sticky;top:0;background:#f9fafb;z-index:2;font-size:12px;color:#4b5563}th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}
-.player{font-weight:800}.scene{font-weight:800;text-align:center}.loc{min-width:210px}.noteinput{min-width:155px;padding:8px 9px;border-radius:9px;border:1px solid #d1d5db;width:100%}.photo-cell{min-width:160px}.thumbs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}.thumb{width:42px;height:42px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer}
-.empty{padding:28px 14px;text-align:center;color:var(--muted)}.back{margin-bottom:10px}.view{display:none}.view.active{display:block}.player-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.badge{display:inline-block;font-size:11px;border-radius:999px;background:#eef2ff;padding:4px 8px;color:#3730a3}.badge.okb{background:#ecfdf5;color:#065f46}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modal img{max-width:100%;max-height:80vh;border-radius:14px}.modal .close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;background:white;color:#111827}.small{font-size:12px;color:var(--muted)}
-.scene-list{display:grid;gap:8px}.scene-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.scene-card summary{cursor:pointer;font-weight:800}.scene-cast{margin-top:8px;font-size:13px}.source{font-size:11px;color:var(--muted);margin-top:5px}.pill{display:inline-block;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;padding:4px 7px;margin:2px;font-size:11px}
-.install{background:#111827;color:#fff;border-radius:14px;padding:12px;margin-bottom:12px}.install b{display:block}.install .small{color:#d1d5db}
-@media(max-width:640px){main{padding:10px}.card{border-radius:16px}.row>*{width:100%}.row button,.row .filebtn{width:100%}.toolbar button{flex:1}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.episode-grid{grid-template-columns:1fr}.player-head{align-items:flex-start;flex-direction:column}.tablewrap{margin-left:-4px;margin-right:-4px}}
-@media print{header,.no-print,.photo-cell button,.install{display:none!important}.view{display:none!important}#detailView.active{display:block!important}body{background:white}.card{border:0;box-shadow:none}table{min-width:0;font-size:10px}}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f3f4f6;
+  color:#111827
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#111827;
+  color:white;
+  padding:14px 16px;
+  padding-top:max(14px,env(safe-area-inset-top));
+  box-shadow:0 2px 10px #0003
+}
+header h1{
+  margin:0;
+  font-size:20px
+}
+.version{
+  font-size:11px;
+  opacity:.65;
+  margin-top:3px
+}
+main{
+  max-width:1000px;
+  margin:auto;
+  padding:14px;
+  padding-bottom:100px
+}
+.card{
+  background:white;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px #00000012
+}
+button,.btn{
+  border:0;
+  border-radius:10px;
+  padding:11px 14px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer
+}
+.primary{
+  background:#111827;
+  color:white
+}
+.secondary{
+  background:#e5e7eb;
+  color:#111827
+}
+.danger{
+  background:#fee2e2;
+  color:#991b1b
+}
+input,textarea,select{
+  width:100%;
+  border:1px solid #d1d5db;
+  border-radius:9px;
+  padding:10px;
+  font-size:15px;
+  background:white
+}
+textarea{
+  min-height:72px;
+  resize:vertical
+}
+.row{
+  display:flex;
+  gap:8px;
+  align-items:center
+}
+.row>*{flex:1}
+.small{
+  font-size:12px;
+  color:#6b7280
+}
+.hidden{display:none!important}
+.tabs{
+  display:flex;
+  gap:6px;
+  overflow:auto;
+  padding-bottom:5px;
+  margin-bottom:12px
+}
+.tab{
+  white-space:nowrap;
+  background:#e5e7eb
+}
+.tab.active{
+  background:#111827;
+  color:white
+}
+.episode{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:12px;
+  margin:8px 0
+}
+.episode-title{
+  font-weight:700;
+  font-size:16px
+}
+.player-card{
+  background:white;
+  border-radius:14px;
+  margin-bottom:14px;
+  overflow:hidden;
+  box-shadow:0 2px 8px #00000012
+}
+.player-head{
+  background:#111827;
+  color:white;
+  padding:12px 14px;
+  font-weight:700
+}
+.scene-row{
+  border-bottom:1px solid #e5e7eb;
+  padding:12px
+}
+.scene-row:last-child{border-bottom:0}
+.scene-title{
+  font-weight:700;
+  margin-bottom:5px
+}
+.location{
+  font-size:13px;
+  color:#4b5563;
+  margin-bottom:9px
+}
+.notes{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px
+}
+.photo-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:8px
+}
+.photo{
+  width:74px;
+  height:74px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid #ddd
+}
+.progress{
+  padding:10px;
+  background:#eff6ff;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:13px
+}
+.badge{
+  display:inline-block;
+  background:#e5e7eb;
+  padding:3px 7px;
+  border-radius:999px;
+  font-size:11px;
+  margin:2px
+}
+.scene-card{
+  background:white;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  box-shadow:0 2px 8px #00000010
+}
+@media(max-width:600px){
+  .notes{grid-template-columns:1fr}
+  .row.stack{flex-direction:column}
+}
+@media print{
+  header,.no-print,.tabs{display:none!important}
+  body{background:white}
+  main{max-width:none;padding:0}
+  .player-card,.scene-card{
+    box-shadow:none;
+    break-inside:avoid
+  }
+}
 </style>
 </head>
+
 <body>
-<header><h1>Çeto Senaryo <span style="font-size:11px;color:#6b7280">OFFLINE v5</span></h1><div class="sub">PDF → tüm senaryoyu tara → fiziksel oyuncu → sahne → mekan → devamlılık</div></header>
+
+<header>
+  <h1>Çeto Senaryo</h1>
+  <div class="version">OFFLINE v5.1</div>
+</header>
+
 <main>
-<div id="offlineInfo" class="install no-print"><b>Offline sürüm</b><div class="small">İlk kurulumdan sonra internet olmadan çalışır. PDF telefondan okunur; senaryo hiçbir sunucuya gönderilmez.</div></div>
 
-<section id="homeView" class="view active">
-<section class="card no-print">
- <div class="row"><div class="grow"><label>Bölüm adı / numarası</label><input id="episodeName" type="text" placeholder="Örn. Haysiyet 5. Bölüm"></div>
- <div><label>&nbsp;</label><label class="filebtn" for="pdfFile">PDF Yükle ve Analiz Et</label><input id="pdfFile" type="file" accept="application/pdf,.pdf"></div></div>
- <div id="status" class="status">Senaryo PDF'ini seç. Tüm metin okunup fiziksel oyuncular sahne sahne çıkarılacak.</div>
-</section>
+<div id="home">
 
-<section class="card"><div class="player-head"><div><b>Kayıtlı Bölümler</b><div class="small">Notlar ve bölüm dökümleri bu iPhone'da saklanır.</div></div><button id="saveBtn" class="secondary no-print">Kaydet</button></div><div id="episodeGrid" class="episode-grid" style="margin-top:12px"></div></section>
+  <div class="card">
+    <h3 style="margin-top:0">Yeni Bölüm</h3>
 
-<section id="currentPanel" class="card" style="display:none">
-<div class="player-head"><div><div id="currentTitle" class="episode-title"></div><div id="currentMeta" class="meta"></div></div><span class="badge okb">Fiziksel oyuncu analizi</span></div>
-<div class="toolbar no-print"><button id="allRowsBtn">Tüm Döküm</button><button id="scenesBtn" class="secondary">Sahne Bazlı</button><button id="csvBtn" class="secondary">Excel/CSV</button><button id="deleteBtn" class="danger">Bölümü Sil</button></div>
-<div id="playerCards" class="players"></div></section>
-</section>
+    <input
+      id="episodeName"
+      placeholder="Bölüm adı — örn. Haysiyet 4. Bölüm"
+    >
 
-<section id="sceneView" class="view">
-<button id="sceneBackBtn" class="ghost back no-print">← Bölüme Dön</button>
-<section class="card"><div class="episode-title" id="sceneTitle"></div><div class="small">Her sahnede bulunan tüm fiziksel oyuncular. Replik içinde yalnızca adı geçen kişiler otomatik olarak eklenmez.</div></section>
-<section class="card"><div id="sceneCards" class="scene-list"></div></section>
-</section>
+    <div style="height:8px"></div>
 
-<section id="detailView" class="view">
-<button id="backBtn" class="ghost back no-print">← Bölümlere Dön</button>
-<section class="card"><div class="player-head"><div><div id="detailTitle" class="episode-title"></div><div id="detailMeta" class="meta"></div></div><div class="toolbar no-print"><button id="printBtn" class="ghost">PDF / Yazdır</button></div></div></section>
-<section class="card no-print"><div class="row"><div class="grow"><label>Arama</label><input id="search" type="text" placeholder="Oyuncu, sahne veya mekan ara"></div></div></section>
-<section class="card" style="padding:0;overflow:hidden"><div class="tablewrap" style="border:0;border-radius:0"><table><thead><tr><th>Oyuncu</th><th>Sahne</th><th>Mekan</th><th>İç/Dış</th><th>Zaman</th><th>Tespit</th><th>Not 1</th><th>Not 2</th><th>Fotoğraf</th></tr></thead><tbody id="tbody"></tbody></table><div id="empty" class="empty">Henüz döküm yok.</div></div></section>
-</section>
+    <input
+      id="pdfFile"
+      type="file"
+      accept="application/pdf"
+    >
+
+    <div style="height:10px"></div>
+
+    <button
+      class="primary"
+      style="width:100%"
+      onclick="importPDF()"
+    >
+      PDF'yi Oku ve Döküm Oluştur
+    </button>
+
+    <div id="status" class="progress hidden"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Kayıtlı Bölümler</h3>
+    <div id="episodes"></div>
+  </div>
+
+</div>
+
+<div id="episodeView" class="hidden">
+
+  <div class="card no-print">
+    <div class="row">
+      <button class="secondary" onclick="goHome()">← Bölümler</button>
+      <button class="secondary" onclick="window.print()">PDF / Yazdır</button>
+      <button class="secondary" onclick="exportCSV()">CSV</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="currentTitle" style="margin:0"></h2>
+    <div id="summary" class="small" style="margin-top:5px"></div>
+  </div>
+
+  <div class="tabs no-print">
+    <button id="tabPlayers" class="tab active" onclick="showTab('players')">
+      Oyuncular
+    </button>
+
+    <button id="tabScenes" class="tab" onclick="showTab('scenes')">
+      Sahneler
+    </button>
+  </div>
+
+  <div id="playersView"></div>
+  <div id="scenesView" class="hidden"></div>
+
+</div>
+
 </main>
 
-<div id="photoModal" class="modal"><button class="close" id="closeModal">Kapat</button><img id="modalImg" alt="Makyaj referans fotoğrafı"></div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js?v=5"></script>
+
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js?v=5';
-const $=s=>document.querySelector(s);let current={id:null,name:'',rows:[],scenes:[]},detailPlayer='';
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js?v=5';
 
-const SEED_PLAYERS=['AZİZ','SİMAY','MEHMET','SADIK','NİMET','AHMET','SUZAN','TUFAN','YILDIZ','HALUK','ŞEHNAZ','TARIK','KISMET','EMİRHAN','CEMAL','HÜLYA','SEMA','YAŞAR','FULYA','SEBAHAT','SABAHAT','FİGEN','GÜLSÜM','DURAN'];
-const SEED_ROLES=['TAMİRCİ','ESNAF','HİZMETÇİ','GARSON','DERGÂH GÖREVLİSİ','GARİBANLAR','GENÇ ÇOCUK','2 GENÇ ÇOCUK','HOSTES','YOLCULAR','DOKTOR','HEMŞİRE','POLİS','ŞOFÖR','MÜŞTERİ','KURYE','GÜVENLİK'];
-const STOP=new Set(['HAYSİYET','SENARYO','SENARYO EKİBİ','MORE','CONT’D',"CONT'D",'RABARBA','DIŞ','İÇ','GÜN','GECE','BÖLÜM','DEVAM','FADE IN','FADE OUT','CUT TO','LEYLA USLU OTER','CEM AKYOLDAŞ','EKİN AKÇAY','ŞÜKRAN ÖZGÜN KARAMAN']);
+const STORE='cetoEpisodesV5';
+let currentId=null;
 
-const norm=s=>String(s||'').normalize('NFKC').replace(/[’`]/g,"'").replace(/\s+/g,' ').trim();
-const key=s=>norm(s).toLocaleUpperCase('tr-TR');
-const fold=s=>norm(s).toLocaleUpperCase('tr-TR').replace(/İ/g,'I').replace(/Ş/g,'S').replace(/Ğ/g,'G').replace(/Ü/g,'U').replace(/Ö/g,'O').replace(/Ç/g,'C').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9 '-]/g,'');
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const attr=s=>esc(s).replace(/`/g,'&#96;');
-
-function editDistance(a,b){a=fold(a);b=fold(b);let m=a.length,n=b.length,prev=Array.from({length:n+1},(_,i)=>i);for(let i=1;i<=m;i++){let cur=[i];for(let j=1;j<=n;j++)cur[j]=Math.min(cur[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[n]}
-function sameName(a,b){let A=fold(a),B=fold(b);if(A===B)return true;let max=Math.max(A.length,B.length);if(max<6)return false;return Math.abs(A.length-B.length)<=1&&editDistance(A,B)<=1}
-function canonicalize(name,dictionary){
- let n=key(name).replace(/\s*\([^)]*\)\s*$/,'').trim();
- for(const d of dictionary)if(sameName(n,d))return d;
- return n;
+function norm(s){
+  return String(s||'')
+    .replace(/\u00a0/g,' ')
+    .replace(/[ \t]+/g,' ')
+    .trim();
 }
-function extractCue(line){
- let s=norm(line.text); 
- if(!s||s.length>52||/\d{3,}/.test(s))return null;
- let voiceOnly=/\((V\.?O\.?|O\.?S\.?|OFF)\)/i.test(s);
- let base=s.replace(/\s*\((CONT.?D|DEVAM|V\.?O\.?|O\.?S\.?|OFF)\)\s*$/i,'').trim();
- // Replik başlığını artık sabit X koordinatına bağlamıyoruz.
- // Böylece farklı PDF sayfa ölçeklerinde SIMAY/SİMAY gibi cue'lar kaçmıyor.
- if(!base||STOP.has(key(base))||base!==key(base))return null;
- if(!/^[A-ZÇĞİÖŞÜÂÎÛ .'-]{2,42}$/.test(base)||base.split(' ').length>4)return null;
- // Sahne başlığı, teknik başlık vb. satırları cue sanma.
- if(/\b(İÇ|DIŞ|IC|DIS|GÜN|GECE)\b/i.test(base))return null;
- return {name:base,voiceOnly};
+
+function fold(s){
+  return norm(s)
+    .toLocaleUpperCase('tr-TR')
+    .replace(/İ/g,'I')
+    .replace(/Ş/g,'S')
+    .replace(/Ğ/g,'G')
+    .replace(/Ü/g,'U')
+    .replace(/Ö/g,'O')
+    .replace(/Ç/g,'C');
 }
+
+function key(s){
+  return norm(s).toLocaleUpperCase('tr-TR');
+}
+
+function loadEpisodes(){
+  try{
+    return JSON.parse(localStorage.getItem(STORE)||'[]');
+  }catch(e){
+    return [];
+  }
+}
+
+function saveEpisodes(a){
+  localStorage.setItem(STORE,JSON.stringify(a));
+}
+
+function esc(s){
+  return String(s??'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function uid(){
+  return Date.now().toString(36)+Math.random().toString(36).slice(2);
+}
+
+function setStatus(t){
+  const e=document.getElementById('status');
+  e.textContent=t;
+  e.classList.remove('hidden');
+}
+
+function hideStatus(){
+  document.getElementById('status').classList.add('hidden');
+}
+
 function sceneHeader(line){
- let s=norm(line.text).replace(/\s*\*+\s*$/,'').trim();
- // PDF.js bazen sahne numarasını iki tarafta, bazen yalnızca bir tarafta,
- // bazen de revizyon yıldızıyla birlikte döndürüyor.
- let m=s.match(/^(\d{1,3})[.\s]+(.+?)(?:\s+\1)?$/);
- if(!m)return null;
- let no=+m[1],middle=norm(m[2]).replace(/\s+\d{1,3}\s*$/,'').trim();
- if(middle.length<3||middle.length>130)return null;
- // Sahne başlığında tipik zaman/İÇ-DIŞ veya tamamen büyük harfli mekan yapısı aranır.
- let upper=key(middle);
- let looksHeader=/\b(İÇ|IÇ|IC|DIŞ|DIS)\b/.test(upper)||/\b(GÜN|GECE)(?:-GÜN|-GECE)?\b/.test(upper);
- if(!looksHeader || middle!==upper)return null;
 
- let time='',io='';
- let t=middle.match(/\s+(GÜN|GECE|GECE-GÜN|GÜN-GECE)$/i);
- if(t){time=key(t[1]);middle=middle.slice(0,t.index).trim()}
- let d=middle.match(/\s+(İÇ|IC|IÇ|DIŞ|DIS)$/i);
- if(d){io=key(d[1]).replace('IC','İÇ').replace('IÇ','İÇ').replace('DIS','DIŞ');middle=middle.slice(0,d.index).trim()}
- return {no,location:middle,io,time};
+  let s=norm(line.text)
+    .replace(/[＊*]+/g,' ')
+    .trim();
+
+  /*
+    Gerçek senaryo örneği:
+
+    1 HALUK EV BAHÇE DIŞ GECE 1
+    2 KARLIOVA EV SALON İÇ GECE 2
+    3 KARLIOVA EV BAHÇE GECE 3
+
+    PDF.js bazı sayfalarda sondaki tekrar numarasını
+    farklı birleştirebildiği için yalnızca baştaki
+    sahne numarasını kesin şart kabul ediyoruz.
+  */
+
+  let m=s.match(/^(\d{1,3})\s+(.+)$/);
+
+  if(!m) return null;
+
+  let no=+m[1];
+  let middle=norm(m[2]);
+
+  /*
+    Sonda aynı sahne numarası bulunuyorsa kaldır.
+  */
+
+  let tail=new RegExp('\\s+'+no+'\\s*$');
+  middle=middle.replace(tail,'').trim();
+
+  /*
+    Sahne başlığında GÜN / GECE veya
+    İÇ / DIŞ ibaresi bulunmalı.
+  */
+
+  let f=fold(middle);
+
+  if(!/\b(GUN|GECE|IC|DIS)\b/.test(f)){
+    return null;
+  }
+
+  let time='';
+  let io='';
+
+  let t=middle.match(
+    /\s+(GECE-GÜN|GÜN-GECE|GÜN|GECE)$/i
+  );
+
+  if(t){
+    time=key(t[1]);
+    middle=middle.slice(0,t.index).trim();
+  }
+
+  let d=middle.match(
+    /\s+(İÇ|IÇ|IC|DIŞ|DIS)$/i
+  );
+
+  if(d){
+    io=key(d[1])
+      .replace('IC','İÇ')
+      .replace('IÇ','İÇ')
+      .replace('DIS','DIŞ');
+
+    middle=middle.slice(0,d.index).trim();
+  }
+
+  if(!middle) return null;
+
+  return {
+    no:no,
+    location:middle,
+    io:io,
+    time:time
+  };
 }
-function detectEpisode(text){let m=text.match(/HAYSİYET\s+(\d+)\.\s*BÖLÜM/i)||text.match(/(\d+)\.\s*BÖLÜM/i);return m?((/HAYSİYET/i.test(text)?'Haysiyet ':'')+m[1]+'. Bölüm'):''}
 
-function actionMention(lineText,player){
- let t=fold(lineText),p=fold(player);
- // Kelime sınırı. Türkçe karakterler fold edildiği için A-Z üzerinde çalışır.
- let rx=new RegExp('(^|[^A-Z0-9])'+p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'([^A-Z0-9]|$)');
- if(rx.test(t))return true;
- // Uzun isimlerde tek karakter yazım hatasına tolerans.
- if(p.length>=6){
-   let words=t.split(/[^A-Z0-9]+/).filter(Boolean);
-   for(const w of words)if(Math.abs(w.length-p.length)<=1&&editDistance(w,p)<=1)return true;
- }
- return false;
+function detectEpisode(text){
+  const m=text.match(/(\d+)\.?\s*BÖLÜM/i);
+  return m ? m[1]+'. Bölüm' : '';
 }
 
-function discoverNarrativeCandidates(lines, known){
- const counts=new Map();
- const common=new Set(['Bir','Bu','O','Ve','Ama','Sonra','Herkes','Adam','Kadın','Erkek','İçeri','Dışarı','Kaldığımız','Arabadan','Boş','Panik','Tamam','Baba','Anne','Abi','Abla','Bey','Hanım','Allah','Rabbim','Sessizlik','Müzik']);
- for(const l of lines){
-   // 150'nin solu aksiyon/yönerge kolonudur; cue ve diyalog kolonlarını dışarıda bırak.
-   if(l.x>155)continue;
-   let s=norm(l.text);
-   let matches=s.match(/\b[A-ZÇĞİÖŞÜ][a-zçğıöşüâîû]{2,}(?:\s+[A-ZÇĞİÖŞÜ][a-zçğıöşüâîû]{2,})?\b/g)||[];
-   for(let c of matches){
-     c=norm(c); if(common.has(c)||STOP.has(key(c)))continue;
-     if(known.some(k=>sameName(c,k)))continue;
-     counts.set(c,(counts.get(c)||0)+1);
-   }
- }
- // Aksiyon metninde iki kez geçen özel adları sessiz karakter adayı olarak kabul et.
- return [...counts.entries()].filter(([,n])=>n>=2).map(([x])=>key(x));
+const STOP=new Set([
+  'GÜN',
+  'GECE',
+  'İÇ',
+  'DIŞ',
+  'DEVAM',
+  'KESME',
+  'FLASHBACK',
+  'MÜZİK',
+  'MÜZIK',
+  'MÜZİK ALTI',
+  'MÜZIK ALTI',
+  'JENERİK',
+  'JENERIK',
+  'SON',
+  'SAHNE',
+  'SALON',
+  'ODA',
+  'MUTFAK',
+  'BAHÇE',
+  'KORİDOR',
+  'KORIDOR',
+  'ARABA',
+  'ARAÇ',
+  'ARAC',
+  'EV',
+  'HASTANE',
+  'OFİS',
+  'OFIS',
+  'OTEL',
+  'UÇAK',
+  'UCAK'
+].map(fold));
+
+function cleanCharacterName(s){
+
+  s=norm(s)
+    .replace(/[＊*]+/g,' ')
+    .replace(/\([^)]*\)/g,' ')
+    .replace(/[:.]+$/,'')
+    .trim();
+
+  s=key(s);
+
+  if(fold(s)==='SIMAY') return 'SİMAY';
+  if(fold(s)==='AZIZ') return 'AZİZ';
+
+  if(
+    fold(s)==='SEBAHAT' ||
+    fold(s)==='SABAHAT'
+  ){
+    return 'SEBAHAT / SABAHAT';
+  }
+
+  return s;
 }
 
-function detectRoles(actionText){
- const out=new Set(),f=fold(actionText);
- const rolePatterns=[
-  ['TAMİRCİ',/\bTAMIRCI\b/],['ESNAF',/\bESNAF\b/],['HİZMETÇİ',/\bHIZMETCI\b/],
-  ['GARSON',/\bGARSON\b/],['DERGÂH GÖREVLİSİ',/\bDERGAH GOREVLISI\b/],['GARİBANLAR',/\bGARIBANLAR\b/],
-  ['GENÇ ÇOCUK',/\bGENC COCUK\b/],['2 GENÇ ÇOCUK',/\b2\s+GENC COCUK\b/],['HOSTES',/\bHOSTES\b/],
-  ['YOLCULAR',/\bYOLCULAR\b/],['DOKTOR',/\bDOKTOR\b/],['HEMŞİRE',/\bHEMSIRE\b/],
-  ['POLİS',/\bPOLIS\b/],['ŞOFÖR',/\bSOFOR\b/],['MÜŞTERİ',/\bMUSTERI\b/],['KURYE',/\bKURYE\b/],['GÜVENLİK',/\bGUVENLIK\b/]
- ];
- for(const [name,rx] of rolePatterns)if(rx.test(f))out.add(name);
- return [...out];
+function extractCue(line){
+
+  let s=norm(line.text);
+
+  if(!s) return null;
+
+  /*
+    Ses dışı konuşmalar fiziksel oyuncu kabul edilmez.
+  */
+
+  const voiceOnly=
+    /\((V\.?O\.?|O\.?S\.?|OFF|DIŞ SES|DIS SES)\)/i.test(s);
+
+  let clean=s
+    .replace(/\([^)]*\)/g,' ')
+    .replace(/[＊*]+/g,' ')
+    .trim();
+
+  if(!clean) return null;
+
+  /*
+    Karakter cue'su genelde tamamen büyük harftir.
+  */
+
+  if(clean!==clean.toLocaleUpperCase('tr-TR')){
+    return null;
+  }
+
+  /*
+    Çok uzun satırlar karakter adı değildir.
+  */
+
+  let words=clean.split(/\s+/);
+
+  if(words.length>5){
+    return null;
+  }
+
+  let f=fold(clean);
+
+  if(STOP.has(f)){
+    return null;
+  }
+
+  /*
+    Sahne başlığı gibi görünen satırları ele.
+  */
+
+  if(/\b(IC|DIS|GUN|GECE)\b/.test(f)){
+    return null;
+  }
+
+  /*
+    Sayı içeren satırlar karakter cue'su değildir.
+  */
+
+  if(/\d/.test(clean)){
+    return null;
+  }
+
+  /*
+    Karakter adında en az bir harf olmalı.
+  */
+
+  if(!/[A-ZÇĞİÖŞÜ]/i.test(clean)){
+    return null;
+  }
+
+  return {
+    name:cleanCharacterName(clean),
+    physical:!voiceOnly
+  };
+}
+
+function probableProperNames(text){
+
+  const result=[];
+
+  let cleaned=norm(text)
+    .replace(/[“”"']/g,' ')
+    .replace(/[()]/g,' ');
+
+  /*
+    Türkçe özel isim adaylarını yakala.
+    Bu aşama yalnızca karakter sözlüğü oluşturmak
+    için kullanılıyor.
+  */
+
+  const re=
+    /\b[A-ZÇĞİÖŞÜ][a-zçğıöşü]+(?:\s+[A-ZÇĞİÖŞÜ][a-zçğıöşü]+)?\b/g;
+
+  let m;
+
+  while((m=re.exec(cleaned))){
+
+    let n=cleanCharacterName(m[0]);
+
+    let f=fold(n);
+
+    if(STOP.has(f)) continue;
+
+    if(n.length<2) continue;
+
+    result.push(n);
+  }
+
+  return result;
+}
+
+function canonical(name){
+
+  let f=fold(name);
+
+  if(f==='SIMAY') return 'SİMAY';
+  if(f==='AZIZ') return 'AZİZ';
+
+  if(f==='SEBAHAT' || f==='SABAHAT'){
+    return 'SEBAHAT / SABAHAT';
+  }
+
+  return cleanCharacterName(name);
+}
+
+function sameName(a,b){
+  return fold(canonical(a))===fold(canonical(b));
+}
+
+function actionMention(text,name){
+
+  let ft=fold(text);
+  let fn=fold(name);
+
+  /*
+    Birleşik alias.
+  */
+
+  if(fn==='SEBAHAT / SABAHAT'){
+    return (
+      /\bSEBAHAT\b/.test(ft) ||
+      /\bSABAHAT\b/.test(ft)
+    );
+  }
+
+  /*
+    Tam isim eşleşmesi.
+  */
+
+  let escaped=fn.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&'
+  );
+
+  let re=new RegExp(
+    '(^|[^A-Z0-9])'+escaped+'([^A-Z0-9]|$)'
+  );
+
+  return re.test(ft);
+}
+
+function addUnique(arr,name){
+
+  name=canonical(name);
+
+  if(!name) return;
+
+  if(!arr.some(x=>sameName(x,name))){
+    arr.push(name);
+  }
 }
 
 async function pdfLines(file){
- let buf=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument({data:buf}).promise,all=[];
- for(let p=1;p<=pdf.numPages;p++){
-   setStatus(`PDF baştan sona okunuyor: ${p}/${pdf.numPages}`);
-   let page=await pdf.getPage(p),tc=await page.getTextContent();
-   let items=tc.items.filter(x=>x.str&&x.str.trim()).map(x=>({s:x.str,x:x.transform[4],y:x.transform[5]}));
-   items.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x);
-   let groups=[];
-   for(const it of items){
-     let last=groups[groups.length-1];
-     if(last&&Math.abs(last.y-it.y)<=2){last.parts.push(it);last.x=Math.min(last.x,it.x)}
-     else groups.push({y:it.y,x:it.x,parts:[it]});
-   }
-   for(const g of groups){
-     g.parts.sort((a,b)=>a.x-b.x);
-     all.push({page:p,x:g.x,y:g.y,text:norm(g.parts.map(z=>z.s).join(' '))});
-   }
- }
- return all.filter(x=>x.text);
+
+  const data=await file.arrayBuffer();
+
+  const pdf=await pdfjsLib.getDocument({
+    data:data
+  }).promise;
+
+  let lines=[];
+
+  for(let p=1;p<=pdf.numPages;p++){
+
+    setStatus(
+      'PDF okunuyor: '+p+' / '+pdf.numPages
+    );
+
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+
+    /*
+      Aynı Y koordinatındaki PDF parçalarını
+      tek satır halinde birleştiriyoruz.
+    */
+
+    let rows=[];
+
+    for(const item of content.items){
+
+      if(!item.str) continue;
+
+      const x=item.transform[4];
+      const y=item.transform[5];
+
+      let row=rows.find(
+        r=>Math.abs(r.y-y)<2
+      );
+
+      if(!row){
+        row={
+          y:y,
+          parts:[]
+        };
+        rows.push(row);
+      }
+
+      row.parts.push({
+        x:x,
+        text:item.str
+      });
+    }
+
+    rows.sort((a,b)=>b.y-a.y);
+
+    for(const row of rows){
+
+      row.parts.sort(
+        (a,b)=>a.x-b.x
+      );
+
+      let text=row.parts
+        .map(x=>x.text)
+        .join(' ');
+
+      text=norm(text);
+
+      if(!text) continue;
+
+      const minX=Math.min(
+        ...row.parts.map(x=>x.x)
+      );
+
+      lines.push({
+        page:p,
+        y:row.y,
+        x:minX,
+        text:text
+      });
+    }
+  }
+
+  return lines;
+}
+
+function buildCharacterDictionary(lines){
+
+  const cues={};
+  const narrative={};
+
+  /*
+    Önce bütün senaryoyu baştan sona tarıyoruz.
+  */
+
+  for(const line of lines){
+
+    let c=extractCue(line);
+
+    if(c && c.name){
+
+      let n=canonical(c.name);
+
+      cues[fold(n)]=n;
+    }
+
+    /*
+      Aksiyon satırları senaryoda çoğunlukla
+      sol tarafta yaklaşık x=108 civarında.
+    */
+
+    if(line.x<=155){
+
+      for(const n of probableProperNames(line.text)){
+
+        let f=fold(n);
+
+        narrative[f]=
+          (narrative[f]||0)+1;
+      }
+    }
+  }
+
+  let chars=[];
+
+  /*
+    Konuşma cue'sunda bulunan isimler kesin aday.
+  */
+
+  Object.values(cues).forEach(
+    n=>addUnique(chars,n)
+  );
+
+  /*
+    Aksiyon metninde tekrar eden özel isimler
+    karakter sözlüğüne eklenir.
+  */
+
+  for(const [f,count] of Object.entries(narrative)){
+
+    if(count>=2){
+
+      let candidate=null;
+
+      for(const line of lines){
+
+        if(line.x>155) continue;
+
+        let names=probableProperNames(line.text);
+
+        candidate=names.find(
+          n=>fold(n)===f
+        );
+
+        if(candidate) break;
+      }
+
+      if(candidate){
+        addUnique(chars,candidate);
+      }
+    }
+  }
+
+  return chars;
 }
 
 function parse(lines){
- // 1) Bütün senaryoyu baştan sona tara ve karakter sözlüğünü oluştur.
- let cueNames=[];
- for(const l of lines){
-   let c=extractCue(l);
-   if(c&&!STOP.has(key(c.name)))cueNames.push(key(c.name));
- }
- let dictionary=[];
- for(const seed of [...SEED_PLAYERS,...SEED_ROLES])if(!dictionary.some(x=>sameName(seed,x)))dictionary.push(seed);
- for(const n of cueNames)if(!dictionary.some(x=>sameName(n,x)))dictionary.push(n);
- for(const n of discoverNarrativeCandidates(lines,dictionary))if(!dictionary.some(x=>sameName(n,x)))dictionary.push(n);
 
- // 2) Sahne başlıklarını robust şekilde bul ve senaryoyu sahnelere ayır.
- let scenes=[],cur=null;
- for(const l of lines){
-   let h=sceneHeader(l);
-   if(h){
-     if(cur)scenes.push(cur);
-     cur={...h,lines:[],cast:new Map()};
-     continue;
-   }
-   if(cur)cur.lines.push(l);
- }
- if(cur)scenes.push(cur);
+  const dictionary=
+    buildCharacterDictionary(lines);
 
- // 3) Her sahnenin TAMAMINI analiz et.
- // - Replik başlığı => karakter fiziksel olarak sahnede (V.O./O.S./OFF hariç)
- // - Aksiyon/yönerge kolonu => isim geçiyorsa fiziksel olarak sahnede
- // - Diyalog cümlesinde yalnızca adı anılan kişi => EKLENMEZ
- for(const sc of scenes){
-   for(const l of sc.lines){
-     let cue=extractCue(l);
-     if(cue){
-       let p=canonicalize(cue.name,dictionary);
-       if(!cue.voiceOnly){
-         let prev=sc.cast.get(p);
-         sc.cast.set(p,prev==='Aksiyon/yönergede'?'Konuşuyor + aksiyonda':'Konuşuyor');
-       }
-       continue;
-     }
+  const scenes=[];
 
-     // PDF senaryo düzeninde aksiyon metni soldadır. Revizyon yıldızları sağda olabilir.
-     // Diyalog metni ~180+, cue ~250+ olduğundan 155 güvenli ayırıcıdır.
-     if(l.x<=155){
-       for(const p0 of dictionary){
-         let p=canonicalize(p0,dictionary);
-         if(actionMention(l.text,p)){
-           let prev=sc.cast.get(p);
-           sc.cast.set(p,prev==='Konuşuyor'?'Konuşuyor + aksiyonda':(prev||'Aksiyon/yönergede'));
-         }
-       }
-       for(const role of detectRoles(l.text)){
-         let prev=sc.cast.get(role);
-         sc.cast.set(role,prev||'Aksiyon/yönergede');
-       }
-     }
-   }
- }
+  let current=null;
 
- // Yaygın yazım varyasyonlarını tek karaktere birleştir.
- const mergeAliases=[
-   ['SEBAHAT / SABAHAT',['SEBAHAT','SABAHAT']],
-   ['SİMAY',['SİMAY','SIMAY']],
-   ['AZİZ',['AZİZ','AZIZ']]
- ];
- for(const sc of scenes){
-   for(const [canon,aliases] of mergeAliases){
-     let found=null;
-     for(const a of aliases){
-       if(sc.cast.has(a)){found=found||sc.cast.get(a);sc.cast.delete(a)}
-     }
-     if(found)sc.cast.set(canon,found);
-   }
- }
+  /*
+    1) Sahnelere ayır.
+  */
 
- let rows=[];
- for(const sc of scenes){
-   for(const [player,source] of sc.cast.entries()){
-     if(STOP.has(key(player)))continue;
-     rows.push({id:uid(),player,scene:sc.no,location:sc.location,io:sc.io,time:sc.time,source,note1:'',note2:''});
-   }
- }
+  for(const line of lines){
 
- let seen=new Set();
- rows=rows.filter(r=>{
-   let k=fold(r.player)+'|'+r.scene;
-   if(seen.has(k))return false;
-   seen.add(k);return true;
- }).sort((a,b)=>a.player.localeCompare(b.player,'tr')||a.scene-b.scene);
+    let h=sceneHeader(line);
 
- let cleanScenes=scenes.map(s=>({
-   no:s.no,location:s.location,io:s.io,time:s.time,
-   cast:[...s.cast.entries()].map(([player,source])=>({player,source}))
-     .sort((a,b)=>a.player.localeCompare(b.player,'tr'))
- }));
+    if(h){
 
- return {
-   rows,scenes:cleanScenes,
-   sceneCount:scenes.length,
-   playerCount:new Set(rows.map(r=>r.player)).size,
-   dictionary
- };
+      if(current){
+        scenes.push(current);
+      }
+
+      current={
+        no:h.no,
+        location:h.location,
+        io:h.io,
+        time:h.time,
+        lines:[],
+        players:[]
+      };
+
+      continue;
+    }
+
+    if(current){
+      current.lines.push(line);
+    }
+  }
+
+  if(current){
+    scenes.push(current);
+  }
+
+  /*
+    2) Her sahnenin oyuncularını tara.
+  */
+
+  for(const scene of scenes){
+
+    let players=[];
+
+    /*
+      Önce konuşma cue'ları.
+    */
+
+    for(const line of scene.lines){
+
+      const cue=extractCue(line);
+
+      if(
+        cue &&
+        cue.physical &&
+        cue.name
+      ){
+        addUnique(
+          players,
+          cue.name
+        );
+      }
+    }
+
+    /*
+      Sonra aksiyon / sahne yönlendirme metni.
+
+      Diyalog gövdesini taramıyoruz.
+      Böylece bir karakter yalnızca konuşmada
+      anıldığı için sahnede var sayılmıyor.
+    */
+
+    for(const line of scene.lines){
+
+      if(line.x>155){
+        continue;
+      }
+
+      for(const character of dictionary){
+
+        if(
+          actionMention(
+            line.text,
+            character
+          )
+        ){
+          addUnique(
+            players,
+            character
+          );
+        }
+      }
+    }
+
+    scene.players=players.sort(
+      (a,b)=>a.localeCompare(
+        b,
+        'tr'
+      )
+    );
+  }
+
+  return scenes;
 }
 
-function setStatus(t,cls=''){let el=$('#status');el.textContent=t;el.className='status '+cls}
-function loadAll(){try{return JSON.parse(localStorage.getItem('cetoEpisodesV5')||'[]')}catch{return[]}}
-function saveAll(a){localStorage.setItem('cetoEpisodesV5',JSON.stringify(a))}
-function saveCurrent(silent=false){
- if(!current.rows.length)return;
- current.name=norm($('#episodeName').value)||current.name||'Bölüm';
- let a=loadAll(),i=a.findIndex(x=>x.id===current.id);if(i>=0)a[i]=current;else a.unshift(current);saveAll(a);renderHome();if(!silent)setStatus(current.name+' kaydedildi.','ok')
-}
-function openDB(){return new Promise((res,rej)=>{let q=indexedDB.open('ceto_senaryo_db_v4',1);q.onupgradeneeded=()=>{let db=q.result;if(!db.objectStoreNames.contains('photos')){let s=db.createObjectStore('photos',{keyPath:'id'});s.createIndex('rowId','rowId')}};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
-async function addPhoto(rowId,file){let db=await openDB(),id=uid();return new Promise((res,rej)=>{let tx=db.transaction('photos','readwrite');tx.objectStore('photos').put({id,rowId,blob:file,created:Date.now()});tx.oncomplete=()=>res(id);tx.onerror=()=>rej(tx.error)})}
-async function getPhotos(rowId){let db=await openDB();return new Promise((res,rej)=>{let tx=db.transaction('photos','readonly'),idx=tx.objectStore('photos').index('rowId'),q=idx.getAll(rowId);q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)})}
-async function deletePhotosForRows(rowIds){let db=await openDB();for(const rowId of rowIds){let photos=await getPhotos(rowId);await new Promise((res,rej)=>{let tx=db.transaction('photos','readwrite'),s=tx.objectStore('photos');photos.forEach(p=>s.delete(p.id));tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}}
+async function importPDF(){
 
-function renderHome(){
- let a=loadAll(),grid=$('#episodeGrid');grid.innerHTML='';
- if(!a.length)grid.innerHTML='<div class="empty">Henüz kayıtlı bölüm yok.</div>';
- for(const ep of a){
-   let players=new Set(ep.rows.map(r=>r.player)),scenes=new Set(ep.rows.map(r=>r.scene)),d=document.createElement('div');
-   d.className='episode-card'+(current.id===ep.id?' active':'');
-   d.innerHTML=`<div class="episode-title">${esc(ep.name)}</div><div class="meta">${scenes.size} sahne • ${players.size} oyuncu • ${ep.rows.length} oyuncu/sahne kaydı</div>`;
-   d.onclick=()=>{current=JSON.parse(JSON.stringify(ep));$('#episodeName').value=current.name;renderHome()};grid.appendChild(d)
- }
- let panel=$('#currentPanel');panel.style.display=current.rows.length?'block':'none';
- if(current.rows.length){
-   $('#currentTitle').textContent=current.name;
-   let players=[...new Set(current.rows.map(r=>r.player))].sort((a,b)=>a.localeCompare(b,'tr'));
-   $('#currentMeta').textContent=`${new Set(current.rows.map(r=>r.scene)).size} sahne • ${players.length} oyuncu`;
-   let pc=$('#playerCards');pc.innerHTML='';
-   for(const p of players){let rows=current.rows.filter(r=>r.player===p),b=document.createElement('button');b.className='player-card';b.innerHTML=`<b>${esc(p)}</b><span>${rows.length} sahne</span>`;b.onclick=()=>openDetail(p);pc.appendChild(b)}
- }
-}
-function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
-function openDetail(player=''){detailPlayer=player;$('#search').value='';$('#detailTitle').textContent=player||current.name+' – Tüm Oyuncular';$('#detailMeta').textContent=player?current.name+' • '+current.rows.filter(r=>r.player===player).length+' sahne':'Oyuncu / sahne / mekan / tespit kaynağı';showView('#detailView');renderDetail()}
-async function renderDetail(){
- let q=key($('#search').value),data=current.rows.filter(r=>(!detailPlayer||r.player===detailPlayer)&&(!q||key(r.player+' '+r.scene+' '+r.location).includes(q))),tb=$('#tbody');tb.innerHTML='';$('#empty').style.display=data.length?'none':'block';
- for(const r of data){
-   let tr=document.createElement('tr');tr.innerHTML=`<td class="player">${esc(r.player)}</td><td class="scene">${r.scene}</td><td class="loc">${esc(r.location)}</td><td>${esc(r.io||'—')}</td><td>${esc(r.time||'—')}</td><td><span class="pill">${esc(r.source||'Tespit')}</span></td><td><input class="noteinput" data-id="${r.id}" data-n="1" value="${attr(r.note1)}" placeholder="Not 1"></td><td><input class="noteinput" data-id="${r.id}" data-n="2" value="${attr(r.note2)}" placeholder="Not 2"></td><td class="photo-cell"><div class="thumbs" data-thumbs="${r.id}"></div><label class="filebtn" style="padding:8px 10px;font-size:12px" for="ph_${r.id}">+ Fotoğraf</label><input id="ph_${r.id}" class="photoInput" data-row="${r.id}" type="file" accept="image/*" capture="environment"></td>`;
-   tb.appendChild(tr);loadThumbs(r.id)
- }
- tb.querySelectorAll('.noteinput').forEach(i=>i.oninput=e=>{let r=current.rows.find(x=>x.id===e.target.dataset.id);if(r){r['note'+e.target.dataset.n]=e.target.value;saveCurrent(true)}});
- tb.querySelectorAll('.photoInput').forEach(i=>i.onchange=async e=>{let f=e.target.files[0];if(!f)return;await addPhoto(e.target.dataset.row,f);await loadThumbs(e.target.dataset.row);e.target.value=''})
-}
-function renderScenes(){
- $('#sceneTitle').textContent=current.name+' – Sahne Bazlı Döküm';let box=$('#sceneCards');box.innerHTML='';
- let scenes=current.scenes||[];
- for(const sc of scenes){
-   let d=document.createElement('details');d.className='scene-card';
-   let cast=(sc.cast||[]).map(x=>`<span class="pill">${esc(x.player)}</span>`).join('');
-   d.innerHTML=`<summary>Sahne ${sc.no} — ${esc(sc.location)} ${esc(sc.io||'')} ${esc(sc.time||'')}</summary><div class="scene-cast">${cast||'<span class="small">Oyuncu tespit edilmedi.</span>'}</div><div class="source">${(sc.cast||[]).map(x=>esc(x.player)+': '+esc(x.source)).join(' • ')}</div>`;
-   box.appendChild(d)
- }
- showView('#sceneView')
-}
-async function loadThumbs(rowId){let box=document.querySelector(`[data-thumbs="${rowId}"]`);if(!box)return;let photos=await getPhotos(rowId);box.innerHTML='';for(const p of photos){let u=URL.createObjectURL(p.blob),im=document.createElement('img');im.className='thumb';im.src=u;im.onclick=()=>{$('#modalImg').src=u;$('#photoModal').classList.add('open')};box.appendChild(im)}}
+  const input=
+    document.getElementById('pdfFile');
 
-$('#pdfFile').onchange=async e=>{
- let f=e.target.files[0];if(!f)return;
- try{
-   setStatus('PDF hazırlanıyor…');
-   let lines=await pdfLines(f),allText=lines.map(x=>x.text).join('\n'),name=detectEpisode(allText)||f.name.replace(/\.pdf$/i,''),out=parse(lines);
-   current={id:uid(),name,rows:out.rows,scenes:out.scenes};
-   $('#episodeName').value=name;saveCurrent(true);renderHome();
-   setStatus(`${out.sceneCount} sahne • ${out.playerCount} oyuncu • ${out.rows.length} fiziksel oyuncu/sahne kaydı. Replik içindeki yalnızca isim anmaları oyuncu sayılmadı.`,'ok')
- }catch(err){console.error(err);setStatus('PDF okunamadı: '+err.message,'err')}
-};
-$('#saveBtn').onclick=()=>saveCurrent();
-$('#allRowsBtn').onclick=()=>openDetail('');
-$('#scenesBtn').onclick=renderScenes;
-$('#backBtn').onclick=()=>{showView('#homeView');renderHome()};
-$('#sceneBackBtn').onclick=()=>{showView('#homeView');renderHome()};
-$('#search').oninput=renderDetail;$('#printBtn').onclick=()=>window.print();
-$('#deleteBtn').onclick=async()=>{if(!current.id)return;let ids=current.rows.map(r=>r.id);await deletePhotosForRows(ids);saveAll(loadAll().filter(x=>x.id!==current.id));current={id:null,name:'',rows:[],scenes:[]};$('#episodeName').value='';renderHome();setStatus('Bölüm ve fotoğrafları silindi.','ok')};
-$('#csvBtn').onclick=()=>{if(!current.rows.length)return;let head=['Oyuncu','Sahne','Mekan','İç/Dış','Zaman','Tespit','Not 1','Not 2'],rows=current.rows.map(r=>[r.player,r.scene,r.location,r.io,r.time,r.source,r.note1,r.note2]),csv='\uFEFF'+[head,...rows].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=(current.name||'senaryo_dokumu').replace(/[^\wçğıöşüÇĞİÖŞÜ.-]+/gi,'_')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
-$('#closeModal').onclick=()=>{$('#photoModal').classList.remove('open');$('#modalImg').src=''};$('#photoModal').onclick=e=>{if(e.target.id==='photoModal')$('#closeModal').click()};
+  const file=input.files[0];
 
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.error))}
-window.addEventListener('online',()=>setStatus('İnternet var. Uygulama yine cihaz üzerinde çalışıyor.','ok'));
-window.addEventListener('offline',()=>setStatus('Offline mod: internet yok, uygulama cihaz üzerinde çalışıyor.','ok'));
+  if(!file){
+    alert('Önce PDF seç.');
+    return;
+  }
 
-let first=loadAll()[0];if(first){current=first;$('#episodeName').value=current.name}renderHome();
+  try{
+
+    setStatus('PDF hazırlanıyor...');
+
+    const lines=
+      await pdfLines(file);
+
+    setStatus(
+      'Senaryo baştan sona analiz ediliyor...'
+    );
+
+    const scenes=parse(lines);
+
+    if(!scenes.length){
+
+      throw new Error(
+        'Sahne başlığı bulunamadı.'
+      );
+    }
+
+    const allText=
+      lines.map(x=>x.text).join('\n');
+
+    let name=norm(
+      document.getElementById(
+        'episodeName'
+      ).value
+    );
+
+    if(!name){
+      name=
+        detectEpisode(allText) ||
+        file.name.replace(/\.pdf$/i,'');
+    }
+
+    const ep={
+      id:uid(),
+      name:name,
+      created:new Date().toISOString(),
+      scenes:scenes,
+      notes:{}
+    };
+
+    let eps=loadEpisodes();
+
+    eps.unshift(ep);
+
+    saveEpisodes(eps);
+
+    hideStatus();
+
+    document.getElementById(
+      'pdfFile'
+    ).value='';
+
+    document.getElementById(
+      'episodeName'
+    ).value='';
+
+    renderEpisodes();
+
+    openEpisode(ep.id);
+
+  }catch(e){
+
+    console.error(e);
+
+    setStatus(
+      'Hata: '+(
+        e.message ||
+        String(e)
+      )
+    );
+
+    alert(
+      'PDF okunurken hata oluştu:\n\n'+
+      (
+        e.message ||
+        String(e)
+      )
+    );
+  }
+}
+
+function renderEpisodes(){
+
+  const box=
+    document.getElementById('episodes');
+
+  const eps=loadEpisodes();
+
+  if(!eps.length){
+
+    box.innerHTML=
+      '<div class="small">'+
+      'Henüz kayıtlı bölüm yok.'+
+      '</div>';
+
+    return;
+  }
+
+  box.innerHTML=eps.map(ep=>{
+
+    const players=
+      getPlayers(ep).length;
+
+    return `
+      <div class="episode">
+
+        <div class="episode-title">
+          ${esc(ep.name)}
+        </div>
+
+        <div class="small">
+          ${ep.scenes.length} sahne ·
+          ${players} oyuncu
+        </div>
+
+        <div
+          class="row"
+          style="margin-top:9px"
+        >
+
+          <button
+            class="primary"
+            onclick="openEpisode('${ep.id}')"
+          >
+            Aç
+          </button>
+
+          <button
+            class="danger"
+            onclick="deleteEpisode('${ep.id}')"
+          >
+            Sil
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+  }).join('');
+}
+
+function getEpisode(){
+
+  return loadEpisodes().find(
+    x=>x.id===currentId
+  );
+}
+
+function getPlayers(ep){
+
+  let arr=[];
+
+  for(const s of ep.scenes){
+
+    for(const p of s.players||[]){
+      addUnique(arr,p);
+    }
+  }
+
+  return arr.sort(
+    (a,b)=>a.localeCompare(
+      b,
+      'tr'
+    )
+  );
+}
+
+function openEpisode(id){
+
+  currentId=id;
+
+  const ep=getEpisode();
+
+  if(!ep) return;
+
+  document.getElementById(
+    'home'
+  ).classList.add('hidden');
+
+  document.getElementById(
+    'episodeView'
+  ).classList.remove('hidden');
+
+  document.getElementById(
+    'currentTitle'
+  ).textContent=ep.name;
+
+  const players=getPlayers(ep);
+
+  document.getElementById(
+    'summary'
+  ).textContent=
+    ep.scenes.length+
+    ' sahne · '+
+    players.length+
+    ' oyuncu';
+
+  renderPlayers(ep);
+  renderScenes(ep);
+
+  showTab('players');
+
+  window.scrollTo(0,0);
+}
+
+function goHome(){
+
+  currentId=null;
+
+  document.getElementById(
+    'episodeView'
+  ).classList.add('hidden');
+
+  document.getElementById(
+    'home'
+  ).classList.remove('hidden');
+
+  renderEpisodes();
+
+  window.scrollTo(0,0);
+}
+
+function deleteEpisode(id){
+
+  if(!confirm(
+    'Bu bölümü silmek istiyor musun?'
+  )){
+    return;
+  }
+
+  let eps=loadEpisodes().filter(
+    x=>x.id!==id
+  );
+
+  saveEpisodes(eps);
+
+  renderEpisodes();
+}
+
+function showTab(tab){
+
+  const pv=
+    document.getElementById(
+      'playersView'
+    );
+
+  const sv=
+    document.getElementById(
+      'scenesView'
+    );
+
+  const tp=
+    document.getElementById(
+      'tabPlayers'
+    );
+
+  const ts=
+    document.getElementById(
+      'tabScenes'
+    );
+
+  if(tab==='players'){
+
+    pv.classList.remove('hidden');
+    sv.classList.add('hidden');
+
+    tp.classList.add('active');
+    ts.classList.remove('active');
+
+  }else{
+
+    sv.classList.remove('hidden');
+    pv.classList.add('hidden');
+
+    ts.classList.add('active');
+    tp.classList.remove('active');
+  }
+}
+
+function noteKey(player,sceneNo,col){
+
+  return [
+    fold(player),
+    sceneNo,
+    col
+  ].join('|');
+}
+
+function saveNote(player,sceneNo,col,value){
+
+  let eps=loadEpisodes();
+
+  let ep=eps.find(
+    x=>x.id===currentId
+  );
+
+  if(!ep) return;
+
+  ep.notes=ep.notes||{};
+
+  ep.notes[
+    noteKey(
+      player,
+      sceneNo,
+      col
+    )
+  ]=value;
+
+  saveEpisodes(eps);
+}
+
+function renderPlayers(ep){
+
+  const root=
+    document.getElementById(
+      'playersView'
+    );
+
+  const players=getPlayers(ep);
+
+  if(!players.length){
+
+    root.innerHTML=`
+      <div class="card">
+        Oyuncu bulunamadı.
+      </div>
+    `;
+
+    return;
+  }
+
+  root.innerHTML=
+    players.map(player=>{
+
+      const scenes=ep.scenes.filter(
+        s=>
+          (s.players||[])
+          .some(
+            p=>sameName(p,player)
+          )
+      );
+
+      return `
+        <div class="player-card">
+
+          <div class="player-head">
+            ${esc(player)}
+            — ${scenes.length} sahne
+          </div>
+
+          ${scenes.map(scene=>{
+
+            const n1=
+              ep.notes?.[
+                noteKey(
+                  player,
+                  scene.no,
+                  1
+                )
+              ]||'';
+
+            const n2=
+              ep.notes?.[
+                noteKey(
+                  player,
+                  scene.no,
+                  2
+                )
+              ]||'';
+
+            return `
+              <div class="scene-row">
+
+                <div class="scene-title">
+                  SAHNE ${scene.no}
+                </div>
+
+                <div class="location">
+                  ${esc(scene.location)}
+                  ${scene.io ?
+                    ' · '+esc(scene.io)
+                    :''
+                  }
+                  ${scene.time ?
+                    ' · '+esc(scene.time)
+                    :''
+                  }
+                </div>
+
+                <div class="notes">
+
+                  <textarea
+                    placeholder="Makyaj devamlılık notu"
+                    oninput="saveNote(
+                      '${escJS(player)}',
+                      ${scene.no},
+                      1,
+                      this.value
+                    )"
+                  >${esc(n1)}</textarea>
+
+                  <textarea
+                    placeholder="Ek not"
+                    oninput="saveNote(
+                      '${escJS(player)}',
+                      ${scene.no},
+                      2,
+                      this.value
+                    )"
+                  >${esc(n2)}</textarea>
+
+                </div>
+
+                <div style="margin-top:8px">
+
+                  <label class="btn secondary no-print">
+                    Fotoğraf Ekle
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      style="display:none"
+                      onchange="addPhoto(
+                        '${escJS(player)}',
+                        ${scene.no},
+                        this
+                      )"
+                    >
+                  </label>
+
+                </div>
+
+                <div
+                  class="photo-wrap"
+                  id="${photoBoxId(
+                    player,
+                    scene.no
+                  )}"
+                ></div>
+
+              </div>
+            `;
+
+          }).join('')}
+
+        </div>
+      `;
+
+    }).join('');
+
+  loadAllPhotos(ep);
+}
+
+function renderScenes(ep){
+
+  const root=
+    document.getElementById(
+      'scenesView'
+    );
+
+  root.innerHTML=
+    ep.scenes.map(scene=>`
+
+      <div class="scene-card">
+
+        <div class="scene-title">
+          SAHNE ${scene.no}
+        </div>
+
+        <div class="location">
+          ${esc(scene.location)}
+          ${scene.io ?
+            ' · '+esc(scene.io)
+            :''
+          }
+          ${scene.time ?
+            ' · '+esc(scene.time)
+            :''
+          }
+        </div>
+
+        <div>
+
+          ${
+            scene.players.length
+            ?
+            scene.players.map(
+              p=>
+                `<span class="badge">
+                  ${esc(p)}
+                </span>`
+            ).join('')
+            :
+            '<span class="small">'+
+            'Oyuncu bulunamadı'+
+            '</span>'
+          }
+
+        </div>
+
+      </div>
+
+    `).join('');
+}
+
+function escJS(s){
+
+  return String(s)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'");
+}
+
+/* =========================
+   FOTOĞRAF VERİTABANI
+   ========================= */
+
+let dbPromise=null;
+
+function openDB(){
+
+  if(dbPromise){
+    return dbPromise;
+  }
+
+  dbPromise=new Promise(
+    (resolve,reject)=>{
+
+      const req=
+        indexedDB.open(
+          'cetoSenaryoPhotos',
+          1
+        );
+
+      req.onupgradeneeded=()=>{
+
+        const db=req.result;
+
+        if(
+          !db.objectStoreNames
+          .contains('photos')
+        ){
+          db.createObjectStore(
+            'photos',
+            {
+              keyPath:'id'
+            }
+          );
+        }
+      };
+
+      req.onsuccess=()=>
+        resolve(req.result);
+
+      req.onerror=()=>
+        reject(req.error);
+    }
+  );
+
+  return dbPromise;
+}
+
+function photoPrefix(
+  episodeId,
+  player,
+  sceneNo
+){
+
+  return [
+    episodeId,
+    fold(player),
+    sceneNo
+  ].join('|');
+}
+
+function photoBoxId(
+  player,
+  sceneNo
+){
+
+  let raw=
+    fold(player)+'_'+sceneNo;
+
+  return 'photos_'+
+    raw.replace(
+      /[^A-Z0-9]/g,
+      '_'
+    );
+}
+
+async function addPhoto(
+  player,
+  sceneNo,
+  input
+){
+
+  const file=input.files?.[0];
+
+  if(!file) return;
+
+  try{
+
+    const db=await openDB();
+
+    const id=
+      photoPrefix(
+        currentId,
+        player,
+        sceneNo
+      )+
+      '|'+
+      uid();
+
+    await new Promise(
+      (resolve,reject)=>{
+
+        const tx=
+          db.transaction(
+            'photos',
+            'readwrite'
+          );
+
+        tx.objectStore(
+          'photos'
+        ).put({
+          id:id,
+          episodeId:currentId,
+          player:player,
+          sceneNo:sceneNo,
+          blob:file
+        });
+
+        tx.oncomplete=resolve;
+        tx.onerror=()=>reject(tx.error);
+      }
+    );
+
+    input.value='';
+
+    loadPhotos(
+      currentId,
+      player,
+      sceneNo
+    );
+
+  }catch(e){
+
+    console.error(e);
+
+    alert(
+      'Fotoğraf kaydedilemedi.'
+    );
+  }
+}
+
+async function getPhotos(
+  episodeId,
+  player,
+  sceneNo
+){
+
+  const db=await openDB();
+
+  return await new Promise(
+    (resolve,reject)=>{
+
+      const tx=
+        db.transaction(
+          'photos',
+          'readonly'
+        );
+
+      const req=
+        tx.objectStore(
+          'photos'
+        ).getAll();
+
+      req.onsuccess=()=>{
+
+        const prefix=
+          photoPrefix(
+            episodeId,
+            player,
+            sceneNo
+          )+'|';
+
+        resolve(
+          req.result.filter(
+            x=>
+              x.id.startsWith(prefix)
+          )
+        );
+      };
+
+      req.onerror=()=>
+        reject(req.error);
+    }
+  );
+}
+
+async function loadPhotos(
+  episodeId,
+  player,
+  sceneNo
+){
+
+  const box=
+    document.getElementById(
+      photoBoxId(
+        player,
+        sceneNo
+      )
+    );
+
+  if(!box) return;
+
+  const photos=
+    await getPhotos(
+      episodeId,
+      player,
+      sceneNo
+    );
+
+  box.innerHTML='';
+
+  for(const p of photos){
+
+    const url=
+      URL.createObjectURL(
+        p.blob
+      );
+
+    const wrap=
+      document.createElement('div');
+
+    wrap.style.position=
+      'relative';
+
+    const img=
+      document.createElement('img');
+
+    img.src=url;
+    img.className='photo';
+
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+    };
+
+    const del=
+      document.createElement('button');
+
+    del.textContent='×';
+
+    del.className=
+      'danger no-print';
+
+    del.style.position=
+      'absolute';
+
+    del.style.right='2px';
+    del.style.top='2px';
+    del.style.padding='2px 7px';
+
+    del.onclick=async()=>{
+
+      await deletePhoto(p.id);
+
+      loadPhotos(
+        episodeId,
+        player,
+        sceneNo
+      );
+    };
+
+    wrap.appendChild(img);
+    wrap.appendChild(del);
+
+    box.appendChild(wrap);
+  }
+}
+
+async function deletePhoto(id){
+
+  const db=await openDB();
+
+  await new Promise(
+    (resolve,reject)=>{
+
+      const tx=
+        db.transaction(
+          'photos',
+          'readwrite'
+        );
+
+      tx.objectStore(
+        'photos'
+      ).delete(id);
+
+      tx.oncomplete=resolve;
+
+      tx.onerror=()=>
+        reject(tx.error);
+    }
+  );
+}
+
+function loadAllPhotos(ep){
+
+  const players=getPlayers(ep);
+
+  for(const player of players){
+
+    const scenes=
+      ep.scenes.filter(
+        s=>
+          (s.players||[])
+          .some(
+            p=>sameName(p,player)
+          )
+      );
+
+    for(const scene of scenes){
+
+      loadPhotos(
+        ep.id,
+        player,
+        scene.no
+      );
+    }
+  }
+}
+
+/* =========================
+   CSV
+   ========================= */
+
+function csvCell(v){
+
+  return '"'+
+    String(v??'')
+      .replace(/"/g,'""')+
+    '"';
+}
+
+function exportCSV(){
+
+  const ep=getEpisode();
+
+  if(!ep) return;
+
+  let rows=[
+    [
+      'Oyuncu',
+      'Sahne',
+      'Mekan',
+      'İç/Dış',
+      'Gün/Gece',
+      'Makyaj Devamlılık',
+      'Ek Not'
+    ]
+  ];
+
+  for(const player of getPlayers(ep)){
+
+    for(
+      const scene of ep.scenes.filter(
+        s=>
+          (s.players||[])
+          .some(
+            p=>sameName(p,player)
+          )
+      )
+    ){
+
+      rows.push([
+        player,
+        scene.no,
+        scene.location,
+        scene.io,
+        scene.time,
+        ep.notes?.[
+          noteKey(
+            player,
+            scene.no,
+            1
+          )
+        ]||'',
+        ep.notes?.[
+          noteKey(
+            player,
+            scene.no,
+            2
+          )
+        ]||''
+      ]);
+    }
+  }
+
+  const csv=
+    '\uFEFF'+
+    rows.map(
+      r=>
+        r.map(csvCell).join(';')
+    ).join('\n');
+
+  const blob=
+    new Blob(
+      [csv],
+      {
+        type:
+          'text/csv;charset=utf-8'
+      }
+    );
+
+  const url=
+    URL.createObjectURL(blob);
+
+  const a=
+    document.createElement('a');
+
+  a.href=url;
+
+  a.download=
+    ep.name.replace(
+      /[^a-z0-9çğıöşü]+/gi,
+      '_'
+    )+
+    '_dokum.csv';
+
+  a.click();
+
+  setTimeout(
+    ()=>URL.revokeObjectURL(url),
+    1000
+  );
+}
+
+/* =========================
+   SERVICE WORKER
+   ========================= */
+
+if('serviceWorker' in navigator){
+
+  window.addEventListener(
+    'load',
+    ()=>{
+
+      navigator.serviceWorker
+        .register('./sw.js')
+        .catch(
+          e=>console.warn(
+            'SW:',
+            e
+          )
+        );
+    }
+  );
+}
+
+renderEpisodes();
+
 </script>
-</body></html>
+
+</body>
+</html>
