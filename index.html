@@ -31,7 +31,7 @@ button,.filebtn{border:0;border-radius:12px;padding:11px 14px;background:var(--a
 </style>
 </head>
 <body>
-<header><h1>Çeto Senaryo <span style="font-size:11px;color:#6b7280">OFFLINE v4</span></h1><div class="sub">PDF → tüm senaryoyu tara → fiziksel oyuncu → sahne → mekan → devamlılık</div></header>
+<header><h1>Çeto Senaryo <span style="font-size:11px;color:#6b7280">OFFLINE v5</span></h1><div class="sub">PDF → tüm senaryoyu tara → fiziksel oyuncu → sahne → mekan → devamlılık</div></header>
 <main>
 <div id="offlineInfo" class="install no-print"><b>Offline sürüm</b><div class="small">İlk kurulumdan sonra internet olmadan çalışır. PDF telefondan okunur; senaryo hiçbir sunucuya gönderilmez.</div></div>
 
@@ -66,9 +66,9 @@ button,.filebtn{border:0;border-radius:12px;padding:11px 14px;background:var(--a
 
 <div id="photoModal" class="modal"><button class="close" id="closeModal">Kapat</button><img id="modalImg" alt="Makyaj referans fotoğrafı"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js?v=5"></script>
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js?v=5';
 const $=s=>document.querySelector(s);let current={id:null,name:'',rows:[],scenes:[]},detailPlayer='';
 
 const SEED_PLAYERS=['AZİZ','SİMAY','MEHMET','SADIK','NİMET','AHMET','SUZAN','TUFAN','YILDIZ','HALUK','ŞEHNAZ','TARIK','KISMET','EMİRHAN','CEMAL','HÜLYA','SEMA','YAŞAR','FULYA','SEBAHAT','SABAHAT','FİGEN','GÜLSÜM','DURAN'];
@@ -90,20 +90,36 @@ function canonicalize(name,dictionary){
  return n;
 }
 function extractCue(line){
- let s=norm(line.text); if(!s||s.length>46||/\d{3,}/.test(s))return null;
+ let s=norm(line.text); 
+ if(!s||s.length>52||/\d{3,}/.test(s))return null;
+ let voiceOnly=/\((V\.?O\.?|O\.?S\.?|OFF)\)/i.test(s);
  let base=s.replace(/\s*\((CONT.?D|DEVAM|V\.?O\.?|O\.?S\.?|OFF)\)\s*$/i,'').trim();
- if(!base||STOP.has(key(base))||base!==key(base)||!/^[A-ZÇĞİÖŞÜÂÎÛ .'-]{2,42}$/.test(base)||base.split(' ').length>4)return null;
- // Senaryo düzeninde karakter başlığı ve diyalog kolonu genellikle soldan ~180 civarıdır.
- if(line.x<145)return null;
- return {name:base, voiceOnly:/\((V\.?O\.?|O\.?S\.?|OFF)\)/i.test(s)};
+ // Replik başlığını artık sabit X koordinatına bağlamıyoruz.
+ // Böylece farklı PDF sayfa ölçeklerinde SIMAY/SİMAY gibi cue'lar kaçmıyor.
+ if(!base||STOP.has(key(base))||base!==key(base))return null;
+ if(!/^[A-ZÇĞİÖŞÜÂÎÛ .'-]{2,42}$/.test(base)||base.split(' ').length>4)return null;
+ // Sahne başlığı, teknik başlık vb. satırları cue sanma.
+ if(/\b(İÇ|DIŞ|IC|DIS|GÜN|GECE)\b/i.test(base))return null;
+ return {name:base,voiceOnly};
 }
 function sceneHeader(line){
- let s=norm(line.text);
- let m=s.match(/^(\d{1,3})\s+(.+?)\s+\1$/);
+ let s=norm(line.text).replace(/\s*\*+\s*$/,'').trim();
+ // PDF.js bazen sahne numarasını iki tarafta, bazen yalnızca bir tarafta,
+ // bazen de revizyon yıldızıyla birlikte döndürüyor.
+ let m=s.match(/^(\d{1,3})[.\s]+(.+?)(?:\s+\1)?$/);
  if(!m)return null;
- let no=+m[1],middle=norm(m[2]); if(middle.length<3||middle.length>110)return null;
- let time='',io='',t=middle.match(/\s+(GÜN|GECE)$/i);if(t){time=key(t[1]);middle=middle.slice(0,t.index).trim()}
- let d=middle.match(/\s+(İÇ|IC|IÇ|DIŞ|DIS)$/i);if(d){io=key(d[1]).replace('IC','İÇ').replace('IÇ','İÇ').replace('DIS','DIŞ');middle=middle.slice(0,d.index).trim()}
+ let no=+m[1],middle=norm(m[2]).replace(/\s+\d{1,3}\s*$/,'').trim();
+ if(middle.length<3||middle.length>130)return null;
+ // Sahne başlığında tipik zaman/İÇ-DIŞ veya tamamen büyük harfli mekan yapısı aranır.
+ let upper=key(middle);
+ let looksHeader=/\b(İÇ|IÇ|IC|DIŞ|DIS)\b/.test(upper)||/\b(GÜN|GECE)(?:-GÜN|-GECE)?\b/.test(upper);
+ if(!looksHeader || middle!==upper)return null;
+
+ let time='',io='';
+ let t=middle.match(/\s+(GÜN|GECE|GECE-GÜN|GÜN-GECE)$/i);
+ if(t){time=key(t[1]);middle=middle.slice(0,t.index).trim()}
+ let d=middle.match(/\s+(İÇ|IC|IÇ|DIŞ|DIS)$/i);
+ if(d){io=key(d[1]).replace('IC','İÇ').replace('IÇ','İÇ').replace('DIS','DIŞ');middle=middle.slice(0,d.index).trim()}
  return {no,location:middle,io,time};
 }
 function detectEpisode(text){let m=text.match(/HAYSİYET\s+(\d+)\.\s*BÖLÜM/i)||text.match(/(\d+)\.\s*BÖLÜM/i);return m?((/HAYSİYET/i.test(text)?'Haysiyet ':'')+m[1]+'. Bölüm'):''}
@@ -123,9 +139,10 @@ function actionMention(lineText,player){
 
 function discoverNarrativeCandidates(lines, known){
  const counts=new Map();
- const common=new Set(['Bir','Bu','O','Ve','Ama','Sonra','Herkes','Adam','Kadın','Erkek','İçeri','Dışarı','Kaldığımız','Arabadan','Boş','Panik','Tamam','Baba','Anne','Abi','Abla','Bey','Hanım','Allah','Rabbim']);
+ const common=new Set(['Bir','Bu','O','Ve','Ama','Sonra','Herkes','Adam','Kadın','Erkek','İçeri','Dışarı','Kaldığımız','Arabadan','Boş','Panik','Tamam','Baba','Anne','Abi','Abla','Bey','Hanım','Allah','Rabbim','Sessizlik','Müzik']);
  for(const l of lines){
-   if(l.x>=145)continue;
+   // 150'nin solu aksiyon/yönerge kolonudur; cue ve diyalog kolonlarını dışarıda bırak.
+   if(l.x>155)continue;
    let s=norm(l.text);
    let matches=s.match(/\b[A-ZÇĞİÖŞÜ][a-zçğıöşüâîû]{2,}(?:\s+[A-ZÇĞİÖŞÜ][a-zçğıöşüâîû]{2,})?\b/g)||[];
    for(let c of matches){
@@ -134,7 +151,7 @@ function discoverNarrativeCandidates(lines, known){
      counts.set(c,(counts.get(c)||0)+1);
    }
  }
- // Tek başına bir defa geçen normal kelimeleri karakter sanmamak için en az 2 tekrar.
+ // Aksiyon metninde iki kez geçen özel adları sessiz karakter adayı olarak kabul et.
  return [...counts.entries()].filter(([,n])=>n>=2).map(([x])=>key(x));
 }
 
@@ -173,40 +190,54 @@ async function pdfLines(file){
 }
 
 function parse(lines){
- // 1) Bütün senaryodan konuşan karakter sözlüğünü çıkar.
+ // 1) Bütün senaryoyu baştan sona tara ve karakter sözlüğünü oluştur.
  let cueNames=[];
- for(const l of lines){let c=extractCue(l);if(c&&!STOP.has(key(c.name)))cueNames.push(key(c.name))}
+ for(const l of lines){
+   let c=extractCue(l);
+   if(c&&!STOP.has(key(c.name)))cueNames.push(key(c.name));
+ }
  let dictionary=[];
  for(const seed of [...SEED_PLAYERS,...SEED_ROLES])if(!dictionary.some(x=>sameName(seed,x)))dictionary.push(seed);
  for(const n of cueNames)if(!dictionary.some(x=>sameName(n,x)))dictionary.push(n);
  for(const n of discoverNarrativeCandidates(lines,dictionary))if(!dictionary.some(x=>sameName(n,x)))dictionary.push(n);
 
- // 2) Sahnelere ayır.
+ // 2) Sahne başlıklarını robust şekilde bul ve senaryoyu sahnelere ayır.
  let scenes=[],cur=null;
  for(const l of lines){
    let h=sceneHeader(l);
-   if(h){if(cur)scenes.push(cur);cur={...h,lines:[],cast:new Map()};continue}
+   if(h){
+     if(cur)scenes.push(cur);
+     cur={...h,lines:[],cast:new Map()};
+     continue;
+   }
    if(cur)cur.lines.push(l);
  }
  if(cur)scenes.push(cur);
 
- // 3) Her sahneyi fiziksel varlık mantığıyla tara:
- // konuşan cue + aksiyon/yönerge kolonundaki isim. Diyalog metnindeki adlar kullanılmaz.
+ // 3) Her sahnenin TAMAMINI analiz et.
+ // - Replik başlığı => karakter fiziksel olarak sahnede (V.O./O.S./OFF hariç)
+ // - Aksiyon/yönerge kolonu => isim geçiyorsa fiziksel olarak sahnede
+ // - Diyalog cümlesinde yalnızca adı anılan kişi => EKLENMEZ
  for(const sc of scenes){
    for(const l of sc.lines){
      let cue=extractCue(l);
      if(cue){
        let p=canonicalize(cue.name,dictionary);
-       if(!cue.voiceOnly && !sc.cast.has(p))sc.cast.set(p,'Konuşuyor');
+       if(!cue.voiceOnly){
+         let prev=sc.cast.get(p);
+         sc.cast.set(p,prev==='Aksiyon/yönergede'?'Konuşuyor + aksiyonda':'Konuşuyor');
+       }
        continue;
      }
-     // Sol aksiyon kolonu: fiziksel eylem/yönerge metni.
-     if(l.x<145){
+
+     // PDF senaryo düzeninde aksiyon metni soldadır. Revizyon yıldızları sağda olabilir.
+     // Diyalog metni ~180+, cue ~250+ olduğundan 155 güvenli ayırıcıdır.
+     if(l.x<=155){
        for(const p0 of dictionary){
          let p=canonicalize(p0,dictionary);
          if(actionMention(l.text,p)){
            let prev=sc.cast.get(p);
-           sc.cast.set(p,prev==='Konuşuyor'?'Konuşuyor + aksiyonda':'Aksiyon/yönergede');
+           sc.cast.set(p,prev==='Konuşuyor'?'Konuşuyor + aksiyonda':(prev||'Aksiyon/yönergede'));
          }
        }
        for(const role of detectRoles(l.text)){
@@ -217,10 +248,20 @@ function parse(lines){
    }
  }
 
- // SEBAHAT/SABAHAT varyasyonunu tek kimliğe al.
+ // Yaygın yazım varyasyonlarını tek karaktere birleştir.
+ const mergeAliases=[
+   ['SEBAHAT / SABAHAT',['SEBAHAT','SABAHAT']],
+   ['SİMAY',['SİMAY','SIMAY']],
+   ['AZİZ',['AZİZ','AZIZ']]
+ ];
  for(const sc of scenes){
-   let s1=sc.cast.get('SEBAHAT'),s2=sc.cast.get('SABAHAT');
-   if(s1||s2){sc.cast.delete('SEBAHAT');sc.cast.delete('SABAHAT');sc.cast.set('SEBAHAT / SABAHAT',s1||s2)}
+   for(const [canon,aliases] of mergeAliases){
+     let found=null;
+     for(const a of aliases){
+       if(sc.cast.has(a)){found=found||sc.cast.get(a);sc.cast.delete(a)}
+     }
+     if(found)sc.cast.set(canon,found);
+   }
  }
 
  let rows=[];
@@ -230,19 +271,31 @@ function parse(lines){
      rows.push({id:uid(),player,scene:sc.no,location:sc.location,io:sc.io,time:sc.time,source,note1:'',note2:''});
    }
  }
+
  let seen=new Set();
- rows=rows.filter(r=>{let k=fold(r.player)+'|'+r.scene;if(seen.has(k))return false;seen.add(k);return true})
-          .sort((a,b)=>a.player.localeCompare(b.player,'tr')||a.scene-b.scene);
+ rows=rows.filter(r=>{
+   let k=fold(r.player)+'|'+r.scene;
+   if(seen.has(k))return false;
+   seen.add(k);return true;
+ }).sort((a,b)=>a.player.localeCompare(b.player,'tr')||a.scene-b.scene);
 
- let cleanScenes=scenes.map(s=>({no:s.no,location:s.location,io:s.io,time:s.time,
-   cast:[...s.cast.entries()].map(([player,source])=>({player,source})).sort((a,b)=>a.player.localeCompare(b.player,'tr'))}));
+ let cleanScenes=scenes.map(s=>({
+   no:s.no,location:s.location,io:s.io,time:s.time,
+   cast:[...s.cast.entries()].map(([player,source])=>({player,source}))
+     .sort((a,b)=>a.player.localeCompare(b.player,'tr'))
+ }));
 
- return {rows,scenes:cleanScenes,sceneCount:scenes.length,playerCount:new Set(rows.map(r=>r.player)).size,dictionary};
+ return {
+   rows,scenes:cleanScenes,
+   sceneCount:scenes.length,
+   playerCount:new Set(rows.map(r=>r.player)).size,
+   dictionary
+ };
 }
 
 function setStatus(t,cls=''){let el=$('#status');el.textContent=t;el.className='status '+cls}
-function loadAll(){try{return JSON.parse(localStorage.getItem('cetoEpisodesV4')||'[]')}catch{return[]}}
-function saveAll(a){localStorage.setItem('cetoEpisodesV4',JSON.stringify(a))}
+function loadAll(){try{return JSON.parse(localStorage.getItem('cetoEpisodesV5')||'[]')}catch{return[]}}
+function saveAll(a){localStorage.setItem('cetoEpisodesV5',JSON.stringify(a))}
 function saveCurrent(silent=false){
  if(!current.rows.length)return;
  current.name=norm($('#episodeName').value)||current.name||'Bölüm';
