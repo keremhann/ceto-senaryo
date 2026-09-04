@@ -1,6 +1,6 @@
-const CACHE='ceto-senaryo-v5.1';
+const CACHE = 'ceto-senaryo-v4.2';
 
-const LOCAL=[
+const LOCAL = [
   './',
   './index.html',
   './manifest.webmanifest',
@@ -8,65 +8,68 @@ const LOCAL=[
   './icon-512.png'
 ];
 
-const PDFJS=[
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js?v=5',
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js?v=5'
+const PDFJS = [
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
 ];
 
-self.addEventListener('install',event=>{
-  event.waitUntil((async()=>{
-    const c=await caches.open(CACHE);
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
 
-    await c.addAll(LOCAL);
+    await cache.addAll(LOCAL);
 
-    for(const u of PDFJS){
-      try{
-        const r=await fetch(u,{mode:'cors'});
-        if(r.ok) await c.put(u,r.clone());
-      }catch(e){}
+    for (const url of PDFJS) {
+      try {
+        const response = await fetch(url, { mode: 'cors' });
+
+        if (response.ok) {
+          await cache.put(url, response.clone());
+        }
+      } catch (e) {}
     }
 
     self.skipWaiting();
   })());
 });
 
-self.addEventListener('activate',event=>
-  event.waitUntil((async()=>{
-    for(const k of await caches.keys()){
-      if(k!==CACHE){
-        await caches.delete(k);
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+
+    for (const key of keys) {
+      if (key !== CACHE) {
+        await caches.delete(key);
       }
     }
 
     await self.clients.claim();
-  })())
-);
+  })());
+});
 
-self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET') return;
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
 
-  event.respondWith((async()=>{
-    const cached=await caches.match(event.request,{
-      ignoreSearch:true
-    });
+  event.respondWith((async () => {
+    const cached = await caches.match(event.request);
 
-    if(cached){
+    if (cached) {
       return cached;
     }
 
-    try{
-      const r=await fetch(event.request);
+    try {
+      const response = await fetch(event.request);
 
-      if(r && (r.ok || r.type==='opaque')){
-        const c=await caches.open(CACHE);
-        c.put(event.request,r.clone());
+      if (response && (response.ok || response.type === 'opaque')) {
+        const cache = await caches.open(CACHE);
+        cache.put(event.request, response.clone());
       }
 
-      return r;
+      return response;
 
-    }catch(e){
+    } catch (e) {
 
-      if(event.request.mode==='navigate'){
+      if (event.request.mode === 'navigate') {
         return await caches.match('./index.html');
       }
 
