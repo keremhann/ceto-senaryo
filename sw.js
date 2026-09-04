@@ -1,4 +1,4 @@
-const CACHE = 'ceto-senaryo-v4.1';
+const CACHE = 'ceto-senaryo-v5.0';
 
 const LOCAL = [
   './',
@@ -9,8 +9,8 @@ const LOCAL = [
 ];
 
 const PDFJS = [
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js?v=5',
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js?v=5'
 ];
 
 self.addEventListener('install', event => {
