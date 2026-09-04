@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Çeto Senaryo</title>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--soft:#f9fafb;--ok:#047857;--warn:#b45309;--danger:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Arial,sans-serif;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:40;background:rgba(243,244,246,.95);backdrop-filter:blur(18px);padding:calc(14px + env(safe-area-inset-top)) 16px 12px;border-bottom:1px solid var(--line)}
+h1{font-size:20px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}main{max-width:1100px;margin:auto;padding:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.grow{flex:1;min-width:170px}label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px}input,select,textarea,button{font:inherit}
+input[type=text],select,textarea{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:11px 12px;background:#fff;color:var(--ink);outline:none}textarea{min-height:66px;resize:vertical}
+button,.filebtn{border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:white;font-weight:700;cursor:pointer;text-align:center;display:inline-block}button.secondary{background:#e5e7eb;color:#111827}button.ghost{background:#fff;color:#111827;border:1px solid #d1d5db}button.danger{background:#fee2e2;color:var(--danger)}input[type=file]{display:none}
+.status{font-size:13px;color:var(--muted);padding-top:8px}.ok{color:var(--ok)}.err{color:var(--danger)}.warn{color:var(--warn)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.episode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.episode-card{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--soft);cursor:pointer}.episode-card.active{outline:2px solid #111827;background:#fff}
+.episode-title{font-weight:800;font-size:17px}.meta{font-size:12px;color:var(--muted);margin-top:5px}.players{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}.player-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;color:var(--ink)}.player-card b{display:block}.player-card span{font-size:12px;color:var(--muted)}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:white;-webkit-overflow-scrolling:touch}table{border-collapse:separate;border-spacing:0;width:100%;min-width:1100px}th,td{padding:10px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);vertical-align:top;text-align:left}th{position:sticky;top:0;background:#f9fafb;z-index:2;font-size:12px;color:#4b5563}th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}
+.player{font-weight:800}.scene{font-weight:800;text-align:center}.loc{min-width:210px}.noteinput{min-width:155px;padding:8px 9px;border-radius:9px;border:1px solid #d1d5db;width:100%}.photo-cell{min-width:160px}.thumbs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}.thumb{width:42px;height:42px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer}
+.empty{padding:28px 14px;text-align:center;color:var(--muted)}.back{margin-bottom:10px}.view{display:none}.view.active{display:block}.player-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.badge{display:inline-block;font-size:11px;border-radius:999px;background:#eef2ff;padding:4px 8px;color:#3730a3}.badge.okb{background:#ecfdf5;color:#065f46}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modal img{max-width:100%;max-height:80vh;border-radius:14px}.modal .close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;background:white;color:#111827}.small{font-size:12px;color:var(--muted)}
+.scene-list{display:grid;gap:8px}.scene-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.scene-card summary{cursor:pointer;font-weight:800}.scene-cast{margin-top:8px;font-size:13px}.source{font-size:11px;color:var(--muted);margin-top:5px}.pill{display:inline-block;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;padding:4px 7px;margin:2px;font-size:11px}
+.install{background:#111827;color:#fff;border-radius:14px;padding:12px;margin-bottom:12px}.install b{display:block}.install .small{color:#d1d5db}
+@media(max-width:640px){main{padding:10px}.card{border-radius:16px}.row>*{width:100%}.row button,.row .filebtn{width:100%}.toolbar button{flex:1}.players{grid-template-columns:repeat(2,minmax(0,1fr))}.episode-grid{grid-template-columns:1fr}.player-head{align-items:flex-start;flex-direction:column}.tablewrap{margin-left:-4px;margin-right:-4px}}
+@media print{header,.no-print,.photo-cell button,.install{display:none!important}.view{display:none!important}#detailView.active{display:block!important}body{background:white}.card{border:0;box-shadow:none}table{min-width:0;font-size:10px}}
+</style>
+</head>
+<body>
+<header><h1>Çeto Senaryo <span style="font-size:11px;color:#6b7280">OFFLINE v4.2 – v4 TABAN</span></h1><div class="sub">PDF → tüm senaryoyu tara → fiziksel oyuncu → sahne → mekan → devamlılık</div></header>
+<main>
+<div id="offlineInfo" class="install no-print"><b>Offline sürüm</b><div class="small">İlk kurulumdan sonra internet olmadan çalışır. PDF telefondan okunur; senaryo hiçbir sunucuya gönderilmez.</div></div>
+
+<section id="homeView" class="view active">
+<section class="card no-print">
+ <div class="row"><div class="grow"><label>Bölüm adı / numarası</label><input id="episodeName" type="text" placeholder="Örn. Haysiyet 5. Bölüm"></div>
+ <div><label>&nbsp;</label><label class="filebtn" for="pdfFile">PDF Yükle ve Analiz Et</label><input id="pdfFile" type="file" accept="application/pdf,.pdf"></div></div>
+ <div id="status" class="status">Senaryo PDF'ini seç. Tüm metin okunup fiziksel oyuncular sahne sahne çıkarılacak.</div>
+</section>
+
+<section class="card"><div class="player-head"><div><b>Kayıtlı Bölümler</b><div class="small">Notlar ve bölüm dökümleri bu iPhone'da saklanır.</div></div><button id="saveBtn" class="secondary no-print">Kaydet</button></div><div id="episodeGrid" class="episode-grid" style="margin-top:12px"></div></section>
+
+<section id="currentPanel" class="card" style="display:none">
+<div class="player-head"><div><div id="currentTitle" class="episode-title"></div><div id="currentMeta" class="meta"></div></div><span class="badge okb">Fiziksel oyuncu analizi</span></div>
+<div class="toolbar no-print"><button id="allRowsBtn">Tüm Döküm</button><button id="scenesBtn" class="secondary">Sahne Bazlı</button><button id="csvBtn" class="secondary">Excel/CSV</button><button id="deleteBtn" class="danger">Bölümü Sil</button></div>
+<div id="playerCards" class="players"></div></section>
+</section>
+
+<section id="sceneView" class="view">
+<button id="sceneBackBtn" class="ghost back no-print">← Bölüme Dön</button>
+<section class="card"><div class="episode-title" id="sceneTitle"></div><div class="small">Her sahnede bulunan tüm fiziksel oyuncular. Replik içinde yalnızca adı geçen kişiler otomatik olarak eklenmez.</div></section>
+<section class="card"><div id="sceneCards" class="scene-list"></div></section>
+</section>
+
+<section id="detailView" class="view">
+<button id="backBtn" class="ghost back no-print">← Bölümlere Dön</button>
+<section class="card"><div class="player-head"><div><div id="detailTitle" class="episode-title"></div><div id="detailMeta" class="meta"></div></div><div class="toolbar no-print"><button id="printBtn" class="ghost">PDF / Yazdır</button></div></div></section>
+<section class="card no-print"><div class="row"><div class="grow"><label>Arama</label><input id="search" type="text" placeholder="Oyuncu, sahne veya mekan ara"></div></div></section>
+<section class="card" style="padding:0;overflow:hidden"><div class="tablewrap" style="border:0;border-radius:0"><table><thead><tr><th>Oyuncu</th><th>Sahne</th><th>Mekan</th><th>İç/Dış</th><th>Zaman</th><th>Tespit</th><th>Not 1</th><th>Not 2</th><th>Fotoğraf</th></tr></thead><tbody id="tbody"></tbody></table><div id="empty" class="empty">Henüz döküm yok.</div></div></section>
+</section>
+</main>
+
+<div id="photoModal" class="modal"><button class="close" id="closeModal">Kapat</button><img id="modalImg" alt="Makyaj referans fotoğrafı"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const $=s=>document.querySelector(s);let current={id:null,name:'',rows:[],scenes:[]},detailPlayer='';
+
+const SEED_PLAYERS=['AZİZ','SİMAY','MEHMET','SADIK','NİMET','AHMET','SUZAN','TUFAN','YILDIZ','HALUK','ŞEHNAZ','TARIK','KISMET','EMİRHAN','CEMAL','HÜLYA','SEMA','YAŞAR','FULYA','SEBAHAT','SABAHAT','FİGEN','GÜLSÜM','DURAN'];
+const SEED_ROLES=['TAMİRCİ','ESNAF','HİZMETÇİ','GARSON','DERGÂH GÖREVLİSİ','GARİBANLAR','GENÇ ÇOCUK','2 GENÇ ÇOCUK','HOSTES','YOLCULAR','DOKTOR','HEMŞİRE','POLİS','ŞOFÖR','MÜŞTERİ','KURYE','GÜVENLİK'];
+const STOP=new Set(['HAYSİYET','SENARYO','SENARYO EKİBİ','MORE','CONT’D',"CONT'D",'RABARBA','DIŞ','İÇ','GÜN','GECE','BÖLÜM','DEVAM','FADE IN','FADE OUT','CUT TO','LEYLA USLU OTER','CEM AKYOLDAŞ','EKİN AKÇAY','ŞÜKRAN ÖZGÜN KARAMAN']);
+
+const norm=s=>String(s||'').normalize('NFKC').replace(/[’`]/g,"'").replace(/\s+/g,' ').trim();
+const key=s=>norm(s).toLocaleUpperCase('tr-TR');
+const fold=s=>norm(s).toLocaleUpperCase('tr-TR').replace(/İ/g,'I').replace(/Ş/g,'S').replace(/Ğ/g,'G').replace(/Ü/g,'U').replace(/Ö/g,'O').replace(/Ç/g,'C').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9 '-]/g,'');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const attr=s=>esc(s).replace(/`/g,'&#96;');
+
+function editDistance(a,b){a=fold(a);b=fold(b);let m=a.length,n=b.length,prev=Array.from({length:n+1},(_,i)=>i);for(let i=1;i<=m;i++){let cur=[i];for(let j=1;j<=n;j++)cur[j]=Math.min(cur[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[n]}
+function sameName(a,b){let A=fold(a),B=fold(b);if(A===B)return true;let max=Math.max(A.length,B.length);if(max<6)return false;return Math.abs(A.length-B.length)<=1&&editDistance(A,B)<=1}
+function canonicalize(name,dictionary){
+ let n=key(name).replace(/\s*\([^)]*\)\s*$/,'').trim();
+ for(const d of dictionary)if(sameName(n,d))return d;
+ return n;
+}
+function extractCue(line){
+ let s=norm(line.text); if(!s||s.length>46||/\d{3,}/.test(s))return null;
+ let base=s.replace(/\s*\((CONT.?D|DEVAM|V\.?O\.?|O\.?S\.?|OFF)\)\s*$/i,'').trim();
+ if(!base||STOP.has(key(base))||base!==key(base)||!/^[A-ZÇĞİÖŞÜÂÎÛ .'-]{2,42}$/.test(base)||base.split(' ').length>4)return null;
+ // Senaryo düzeninde karakter başlığı ve diyalog kolonu genellikle soldan ~180 civarıdır.
+ if(line.x<145)return null;
+ return {name:base, voiceOnly:/\((V\.?O\.?|O\.?S\.?|OFF)\)/i.test(s)};
+}
+function sceneHeader(line){
+ let s=norm(line.text);
+ let m=s.match(/^(\d{1,3})\s+(.+?)\s+\1$/);
+ if(!m)return null;
+ let no=+m[1],middle=norm(m[2]); if(middle.length<3||middle.length>110)return null;
+ let time='',io='',t=middle.match(/\s+(GÜN|GECE)$/i);if(t){time=key(t[1]);middle=middle.slice(0,t.index).trim()}
+ let d=middle.match(/\s+(İÇ|IC|IÇ|DIŞ|DIS)$/i);if(d){io=key(d[1]).replace('IC','İÇ').replace('IÇ','İÇ').replace('DIS','DIŞ');middle=middle.slice(0,d.index).trim()}
+ return {no,location:middle,io,time};
+}
+function detectEpisode(text){let m=text.match(/HAYSİYET\s+(\d+)\.\s*BÖLÜM/i)||text.match(/(\d+)\.\s*BÖLÜM/i);return m?((/HAYSİYET/i.test(text)?'Haysiyet ':'')+m[1]+'. Bölüm'):''}
+
+function actionMention(lineText,player){
+ let t=fold(lineText),p=fold(player);
+ // Kelime sınırı. Türkçe karakterler fold edildiği için A-Z üzerinde çalışır.
+ let rx=new RegExp('(^|[^A-Z0-9])'+p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'([^A-Z0-9]|$)');
+ if(rx.test(t))return true;
+ // Uzun isimlerde tek karakter yazım hatasına tolerans.
+ if(p.length>=6){
+   let words=t.split(/[^A-Z0-9]+/).filter(Boolean);
+   for(const w of words)if(Math.abs(w.length-p.length)<=1&&editDistance(w,p)<=1)return true;
+ }
+ return false;
+}
+
+function discoverNarrativeCandidates(lines, known){
+ const counts=new Map();
+ const common=new Set(['Bir','Bu','O','Ve','Ama','Sonra','Herkes','Adam','Kadın','Erkek','İçeri','Dışarı','Kaldığımız','Arabadan','Boş','Panik','Tamam','Baba','Anne','Abi','Abla','Bey','Hanım','Allah','Rabbim']);
+ for(const l of lines){
+   if(l.x>=170)continue;
+   let s=norm(l.text);
+   let matches=s.match(/\b[A-ZÇĞİÖŞÜ][a-zçğıöşüâîû]{2,}(?:\s+[A-ZÇĞİÖŞÜ][a-zçğıöşüâîû]{2,})?\b/g)||[];
+   for(let c of matches){
+     c=norm(c); if(common.has(c)||STOP.has(key(c)))continue;
+     if(known.some(k=>sameName(c,k)))continue;
+     counts.set(c,(counts.get(c)||0)+1);
+   }
+ }
+ // Tek başına bir defa geçen normal kelimeleri karakter sanmamak için en az 2 tekrar.
+ return [...counts.entries()].filter(([,n])=>n>=2).map(([x])=>key(x));
+}
+
+function detectRoles(actionText){
+ const out=new Set(),f=fold(actionText);
+ const rolePatterns=[
+  ['TAMİRCİ',/\bTAMIRCI\b/],['ESNAF',/\bESNAF\b/],['HİZMETÇİ',/\bHIZMETCI\b/],
+  ['GARSON',/\bGARSON\b/],['DERGÂH GÖREVLİSİ',/\bDERGAH GOREVLISI\b/],['GARİBANLAR',/\bGARIBANLAR\b/],
+  ['GENÇ ÇOCUK',/\bGENC COCUK\b/],['2 GENÇ ÇOCUK',/\b2\s+GENC COCUK\b/],['HOSTES',/\bHOSTES\b/],
+  ['YOLCULAR',/\bYOLCULAR\b/],['DOKTOR',/\bDOKTOR\b/],['HEMŞİRE',/\bHEMSIRE\b/],
+  ['POLİS',/\bPOLIS\b/],['ŞOFÖR',/\bSOFOR\b/],['MÜŞTERİ',/\bMUSTERI\b/],['KURYE',/\bKURYE\b/],['GÜVENLİK',/\bGUVENLIK\b/]
+ ];
+ for(const [name,rx] of rolePatterns)if(rx.test(f))out.add(name);
+ return [...out];
+}
+
+async function pdfLines(file){
+ let buf=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument({data:buf}).promise,all=[];
+ for(let p=1;p<=pdf.numPages;p++){
+   setStatus(`PDF baştan sona okunuyor: ${p}/${pdf.numPages}`);
+   let page=await pdf.getPage(p),tc=await page.getTextContent();
+   let items=tc.items.filter(x=>x.str&&x.str.trim()).map(x=>({s:x.str,x:x.transform[4],y:x.transform[5]}));
+   items.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x);
+   let groups=[];
+   for(const it of items){
+     let last=groups[groups.length-1];
+     if(last&&Math.abs(last.y-it.y)<=2){last.parts.push(it);last.x=Math.min(last.x,it.x)}
+     else groups.push({y:it.y,x:it.x,parts:[it]});
+   }
+   for(const g of groups){
+     g.parts.sort((a,b)=>a.x-b.x);
+     all.push({page:p,x:g.x,y:g.y,text:norm(g.parts.map(z=>z.s).join(' '))});
+   }
+ }
+ return all.filter(x=>x.text);
+}
+
+function parse(lines){
+ // 1) Bütün senaryodan konuşan karakter sözlüğünü çıkar.
+ let cueNames=[];
+ for(const l of lines){let c=extractCue(l);if(c&&!STOP.has(key(c.name)))cueNames.push(key(c.name))}
+ let dictionary=[];
+ for(const seed of [...SEED_PLAYERS,...SEED_ROLES])if(!dictionary.some(x=>sameName(seed,x)))dictionary.push(seed);
+ for(const n of cueNames)if(!dictionary.some(x=>sameName(n,x)))dictionary.push(n);
+ for(const n of discoverNarrativeCandidates(lines,dictionary))if(!dictionary.some(x=>sameName(n,x)))dictionary.push(n);
+
+ // 2) Sahnelere ayır.
+ let scenes=[],cur=null;
+ for(const l of lines){
+   let h=sceneHeader(l);
+   if(h){if(cur)scenes.push(cur);cur={...h,lines:[],cast:new Map()};continue}
+   if(cur)cur.lines.push(l);
+ }
+ if(cur)scenes.push(cur);
+
+ // 3) Her sahneyi fiziksel varlık mantığıyla tara:
+ // konuşan cue + aksiyon/yönerge kolonundaki isim. Diyalog metnindeki adlar kullanılmaz.
+ for(const sc of scenes){
+   for(const l of sc.lines){
+     let cue=extractCue(l);
+     if(cue){
+       let p=canonicalize(cue.name,dictionary);
+       if(!cue.voiceOnly && !sc.cast.has(p))sc.cast.set(p,'Konuşuyor');
+       continue;
+     }
+     // Sol aksiyon kolonu: fiziksel eylem/yönerge metni.
+     if(l.x<170){
+       for(const p0 of dictionary){
+         let p=canonicalize(p0,dictionary);
+         if(actionMention(l.text,p)){
+           let prev=sc.cast.get(p);
+           sc.cast.set(p,prev==='Konuşuyor'?'Konuşuyor + aksiyonda':'Aksiyon/yönergede');
+         }
+       }
+       for(const role of detectRoles(l.text)){
+         let prev=sc.cast.get(role);
+         sc.cast.set(role,prev||'Aksiyon/yönergede');
+       }
+     }
+   }
+ }
+
+ // SEBAHAT/SABAHAT varyasyonunu tek kimliğe al.
+ for(const sc of scenes){
+   let s1=sc.cast.get('SEBAHAT'),s2=sc.cast.get('SABAHAT');
+   if(s1||s2){sc.cast.delete('SEBAHAT');sc.cast.delete('SABAHAT');sc.cast.set('SEBAHAT / SABAHAT',s1||s2)}
+ }
+
+ let rows=[];
+ for(const sc of scenes){
+   for(const [player,source] of sc.cast.entries()){
+     if(STOP.has(key(player)))continue;
+     rows.push({id:uid(),player,scene:sc.no,location:sc.location,io:sc.io,time:sc.time,source,note1:'',note2:''});
+   }
+ }
+ let seen=new Set();
+ rows=rows.filter(r=>{let k=fold(r.player)+'|'+r.scene;if(seen.has(k))return false;seen.add(k);return true})
+          .sort((a,b)=>a.player.localeCompare(b.player,'tr')||a.scene-b.scene);
+
+ let cleanScenes=scenes.map(s=>({no:s.no,location:s.location,io:s.io,time:s.time,
+   cast:[...s.cast.entries()].map(([player,source])=>({player,source})).sort((a,b)=>a.player.localeCompare(b.player,'tr'))}));
+
+ return {rows,scenes:cleanScenes,sceneCount:scenes.length,playerCount:new Set(rows.map(r=>r.player)).size,dictionary};
+}
+
+function setStatus(t,cls=''){let el=$('#status');el.textContent=t;el.className='status '+cls}
+function loadAll(){try{return JSON.parse(localStorage.getItem('cetoEpisodesV4')||'[]')}catch{return[]}}
+function saveAll(a){localStorage.setItem('cetoEpisodesV4',JSON.stringify(a))}
+function saveCurrent(silent=false){
+ if(!current.rows.length)return;
+ current.name=norm($('#episodeName').value)||current.name||'Bölüm';
+ let a=loadAll(),i=a.findIndex(x=>x.id===current.id);if(i>=0)a[i]=current;else a.unshift(current);saveAll(a);renderHome();if(!silent)setStatus(current.name+' kaydedildi.','ok')
+}
+function openDB(){return new Promise((res,rej)=>{let q=indexedDB.open('ceto_senaryo_db_v4',1);q.onupgradeneeded=()=>{let db=q.result;if(!db.objectStoreNames.contains('photos')){let s=db.createObjectStore('photos',{keyPath:'id'});s.createIndex('rowId','rowId')}};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+async function addPhoto(rowId,file){let db=await openDB(),id=uid();return new Promise((res,rej)=>{let tx=db.transaction('photos','readwrite');tx.objectStore('photos').put({id,rowId,blob:file,created:Date.now()});tx.oncomplete=()=>res(id);tx.onerror=()=>rej(tx.error)})}
+async function getPhotos(rowId){let db=await openDB();return new Promise((res,rej)=>{let tx=db.transaction('photos','readonly'),idx=tx.objectStore('photos').index('rowId'),q=idx.getAll(rowId);q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)})}
+async function deletePhotosForRows(rowIds){let db=await openDB();for(const rowId of rowIds){let photos=await getPhotos(rowId);await new Promise((res,rej)=>{let tx=db.transaction('photos','readwrite'),s=tx.objectStore('photos');photos.forEach(p=>s.delete(p.id));tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}}
+
+function renderHome(){
+ let a=loadAll(),grid=$('#episodeGrid');grid.innerHTML='';
+ if(!a.length)grid.innerHTML='<div class="empty">Henüz kayıtlı bölüm yok.</div>';
+ for(const ep of a){
+   let players=new Set(ep.rows.map(r=>r.player)),scenes=new Set(ep.rows.map(r=>r.scene)),d=document.createElement('div');
+   d.className='episode-card'+(current.id===ep.id?' active':'');
+   d.innerHTML=`<div class="episode-title">${esc(ep.name)}</div><div class="meta">${scenes.size} sahne • ${players.size} oyuncu • ${ep.rows.length} oyuncu/sahne kaydı</div>`;
+   d.onclick=()=>{current=JSON.parse(JSON.stringify(ep));$('#episodeName').value=current.name;renderHome()};grid.appendChild(d)
+ }
+ let panel=$('#currentPanel');panel.style.display=current.rows.length?'block':'none';
+ if(current.rows.length){
+   $('#currentTitle').textContent=current.name;
+   let players=[...new Set(current.rows.map(r=>r.player))].sort((a,b)=>a.localeCompare(b,'tr'));
+   $('#currentMeta').textContent=`${new Set(current.rows.map(r=>r.scene)).size} sahne • ${players.length} oyuncu`;
+   let pc=$('#playerCards');pc.innerHTML='';
+   for(const p of players){let rows=current.rows.filter(r=>r.player===p),b=document.createElement('button');b.className='player-card';b.innerHTML=`<b>${esc(p)}</b><span>${rows.length} sahne</span>`;b.onclick=()=>openDetail(p);pc.appendChild(b)}
+ }
+}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
+function openDetail(player=''){detailPlayer=player;$('#search').value='';$('#detailTitle').textContent=player||current.name+' – Tüm Oyuncular';$('#detailMeta').textContent=player?current.name+' • '+current.rows.filter(r=>r.player===player).length+' sahne':'Oyuncu / sahne / mekan / tespit kaynağı';showView('#detailView');renderDetail()}
+async function renderDetail(){
+ let q=key($('#search').value),data=current.rows.filter(r=>(!detailPlayer||r.player===detailPlayer)&&(!q||key(r.player+' '+r.scene+' '+r.location).includes(q))),tb=$('#tbody');tb.innerHTML='';$('#empty').style.display=data.length?'none':'block';
+ for(const r of data){
+   let tr=document.createElement('tr');tr.innerHTML=`<td class="player">${esc(r.player)}</td><td class="scene">${r.scene}</td><td class="loc">${esc(r.location)}</td><td>${esc(r.io||'—')}</td><td>${esc(r.time||'—')}</td><td><span class="pill">${esc(r.source||'Tespit')}</span></td><td><input class="noteinput" data-id="${r.id}" data-n="1" value="${attr(r.note1)}" placeholder="Not 1"></td><td><input class="noteinput" data-id="${r.id}" data-n="2" value="${attr(r.note2)}" placeholder="Not 2"></td><td class="photo-cell"><div class="thumbs" data-thumbs="${r.id}"></div><label class="filebtn" style="padding:8px 10px;font-size:12px" for="ph_${r.id}">+ Fotoğraf</label><input id="ph_${r.id}" class="photoInput" data-row="${r.id}" type="file" accept="image/*" capture="environment"></td>`;
+   tb.appendChild(tr);loadThumbs(r.id)
+ }
+ tb.querySelectorAll('.noteinput').forEach(i=>i.oninput=e=>{let r=current.rows.find(x=>x.id===e.target.dataset.id);if(r){r['note'+e.target.dataset.n]=e.target.value;saveCurrent(true)}});
+ tb.querySelectorAll('.photoInput').forEach(i=>i.onchange=async e=>{let f=e.target.files[0];if(!f)return;await addPhoto(e.target.dataset.row,f);await loadThumbs(e.target.dataset.row);e.target.value=''})
+}
+function renderScenes(){
+ $('#sceneTitle').textContent=current.name+' – Sahne Bazlı Döküm';let box=$('#sceneCards');box.innerHTML='';
+ let scenes=current.scenes||[];
+ for(const sc of scenes){
+   let d=document.createElement('details');d.className='scene-card';
+   let cast=(sc.cast||[]).map(x=>`<span class="pill">${esc(x.player)}</span>`).join('');
+   d.innerHTML=`<summary>Sahne ${sc.no} — ${esc(sc.location)} ${esc(sc.io||'')} ${esc(sc.time||'')}</summary><div class="scene-cast">${cast||'<span class="small">Oyuncu tespit edilmedi.</span>'}</div><div class="source">${(sc.cast||[]).map(x=>esc(x.player)+': '+esc(x.source)).join(' • ')}</div>`;
+   box.appendChild(d)
+ }
+ showView('#sceneView')
+}
+async function loadThumbs(rowId){let box=document.querySelector(`[data-thumbs="${rowId}"]`);if(!box)return;let photos=await getPhotos(rowId);box.innerHTML='';for(const p of photos){let u=URL.createObjectURL(p.blob),im=document.createElement('img');im.className='thumb';im.src=u;im.onclick=()=>{$('#modalImg').src=u;$('#photoModal').classList.add('open')};box.appendChild(im)}}
+
+$('#pdfFile').onchange=async e=>{
+ let f=e.target.files[0];if(!f)return;
+ try{
+   setStatus('PDF hazırlanıyor…');
+   let lines=await pdfLines(f),allText=lines.map(x=>x.text).join('\n'),name=detectEpisode(allText)||f.name.replace(/\.pdf$/i,''),out=parse(lines);
+   current={id:uid(),name,rows:out.rows,scenes:out.scenes};
+   $('#episodeName').value=name;saveCurrent(true);renderHome();
+   setStatus(`${out.sceneCount} sahne • ${out.playerCount} oyuncu • ${out.rows.length} fiziksel oyuncu/sahne kaydı. Replik içindeki yalnızca isim anmaları oyuncu sayılmadı.`,'ok')
+ }catch(err){console.error(err);setStatus('PDF okunamadı: '+err.message,'err')}
+};
+$('#saveBtn').onclick=()=>saveCurrent();
+$('#allRowsBtn').onclick=()=>openDetail('');
+$('#scenesBtn').onclick=renderScenes;
+$('#backBtn').onclick=()=>{showView('#homeView');renderHome()};
+$('#sceneBackBtn').onclick=()=>{showView('#homeView');renderHome()};
+$('#search').oninput=renderDetail;$('#printBtn').onclick=()=>window.print();
+$('#deleteBtn').onclick=async()=>{if(!current.id)return;let ids=current.rows.map(r=>r.id);await deletePhotosForRows(ids);saveAll(loadAll().filter(x=>x.id!==current.id));current={id:null,name:'',rows:[],scenes:[]};$('#episodeName').value='';renderHome();setStatus('Bölüm ve fotoğrafları silindi.','ok')};
+$('#csvBtn').onclick=()=>{if(!current.rows.length)return;let head=['Oyuncu','Sahne','Mekan','İç/Dış','Zaman','Tespit','Not 1','Not 2'],rows=current.rows.map(r=>[r.player,r.scene,r.location,r.io,r.time,r.source,r.note1,r.note2]),csv='\uFEFF'+[head,...rows].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=(current.name||'senaryo_dokumu').replace(/[^\wçğıöşüÇĞİÖŞÜ.-]+/gi,'_')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+$('#closeModal').onclick=()=>{$('#photoModal').classList.remove('open');$('#modalImg').src=''};$('#photoModal').onclick=e=>{if(e.target.id==='photoModal')$('#closeModal').click()};
+
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.error))}
+window.addEventListener('online',()=>setStatus('İnternet var. Uygulama yine cihaz üzerinde çalışıyor.','ok'));
+window.addEventListener('offline',()=>setStatus('Offline mod: internet yok, uygulama cihaz üzerinde çalışıyor.','ok'));
+
+let first=loadAll()[0];if(first){current=first;$('#episodeName').value=current.name}renderHome();
+</script>
+</body></html>
